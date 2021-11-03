@@ -1,0 +1,531 @@
+apiVersion: e2e.mayadata.io/v1alpha1
+kind: MasterPlan
+metadata:
+  name: litmus-e2e-master-testplan
+spec:
+  tests:
+  # ----------------------------------------------------------
+  # Kubernetes generic application level chaos experiment BDDs
+  # ----------------------------------------------------------
+  - tcid: TCID-EC2-GENERIC-APP-POD-DELETE
+    name: "TCID-EC2-GENERIC-APP-POD-DELETE"
+    description: "Fail the application pod"
+    labels:
+      test/feature: "Generic-App"
+      test/tags: "pod, kill"
+      git/location: "https://github.com/litmuschaos/litmus-e2e/tree/gh-pages/generic-pipeline/pod-delete"
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GENERIC-APP-CONTAINER-KILL
+    name: "TCID-EC2-GENERIC-APP-CONTAINER-KILL"
+    description: "Kill one container in the application pod"
+    labels:
+      test/feature: "Generic-App"
+      test/tags: "pod, container"
+      git/location: "https://github.com/litmuschaos/litmus-e2e/tree/gh-pages/generic-pipeline/container-kill"
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GENERIC-APP-POD-CPU-HOG
+    name: "TCID-EC2-GENERIC-APP-POD-CPU-HOG"
+    description: "Consume CPU resources on the application container"
+    labels:
+      test/feature: "Generic-App"
+      test/tags: "pod, cpu,container"
+      git/location: "https://github.com/litmuschaos/litmus-e2e/tree/gh-pages/generic-pipeline/pod-cpu-hog"
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GENERIC-APP-POD-MEMORY-HOG
+    name: "TCID-EC2-GENERIC-APP-POD-MEMORY-HOG"
+    description: "Consume memory resources on the application container"
+    labels:
+      test/feature: "Generic-App"
+      test/tags: "pod, memory"
+      git/location: "https://github.com/litmuschaos/litmus-e2e/tree/gh-pages/generic-pipeline/pod-memory-hog"
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GENERIC-APP-POD-NETWORK-CORRUPTION
+    name: "TCID-EC2-GENERIC-APP-POD-NETWORK-CORRUPTION"
+    description: "Inject Network Packet Corruption Into Application Pod"
+    labels:
+      test/feature: "Generic-App"
+      test/tags: "pod, network, corruption"
+      git/location: "https://github.com/litmuschaos/litmus-e2e/tree/gh-pages/generic-pipeline/pod-network-corruption"
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GENERIC-APP-POD-NETWORK-LATENCY
+    name: "TCID-EC2-GENERIC-APP-POD-NETWORK-LATENCY"
+    description: "Inject Network Latency Into Application Pod"
+    labels:
+      test/feature: "Generic-App"
+      test/tags: "pod, network, latency"
+      git/location: "https://github.com/litmuschaos/litmus-e2e/tree/gh-pages/generic-pipeline/pod-network-latency"
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GENERIC-APP-POD-NETWORK-LOSS
+    name: "TCID-EC2-GENERIC-APP-POD-NETWORK-LOSS"
+    description: "Inject Packet Loss Into Application Pod"
+    labels:
+      test/feature: "Generic-App"
+      test/tags: "pod, network, loss"
+      git/location: "https://github.com/litmuschaos/litmus-e2e/tree/gh-pages/generic-pipeline/pod-network-loss"
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GENERIC-APP-POD-NETWORK-DUPLICATION
+    name: "TCID-EC2-GENERIC-APP-POD-NETWORK-DUPLICATION"
+    description: "Inject Network Duplication Into Application Pod"
+    labels:
+      test/feature: "Generic-App"
+      test/tags: "pod, network, duplication"
+      git/location: "https://github.com/litmuschaos/litmus-e2e/tree/gh-pages/generic-pipeline/pod-network-duplication"
+      test/status: "Not Done"
+
+  - tcid: TCID-EC2-GENERIC-APP-DISK-FILL
+    name: "TCID-EC2-GENERIC-APP-DISK-FILL"
+    description: "Fill up Ephemeral Storage of a Pod"
+    labels:
+      test/feature: "Generic-App"
+      test/tags: "pod, ephemeral, disk"
+      git/location: "https://github.com/litmuschaos/litmus-e2e/tree/gh-pages/generic-pipeline/disk-fill"
+      test/status: "Done" 
+      
+  - tcid: TCID-EC2-GENERIC-APP-POD-IO-STRESS
+    name: "TCID-EC2-GENERIC-APP-POD-IO-STRESS"
+    description: "Inject IO stress on the application container"
+    labels:
+      test/feature: "Generic-App"
+      test/tags: "pod, io, stress"
+      git/location: "https://github.com/litmuschaos/litmus-e2e/tree/gh-pages/generic-pipeline/pod-io-stress"
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GENERIC-APP-POD-AFFECTED-PERCENTAGE-TON-PARALLEL
+    name: "TCID-EC2-GENERIC-APP-POD-AFFECTED-PERCENTAGE-TON-PARALLEL"
+    description: "Test the app level experiment when pod affected percentage is 100 and sequence is parallel"
+    labels:
+      test/feature: "Generic-App"
+      test/tags: "pod, parallel,pod-affected-percentage"
+      git/location: ""
+      test/status: "Done"    
+      
+  - tcid: TCID-EC2-GENERIC-APP-POD-AFFECTED-PERCENTAGE-TON-SERIES
+    name: "TCID-EC2-GENERIC-APP-POD-AFFECTED-PERCENTAGE-TON-SERIES"
+    description: "Test the app level experiment when pod affected percentage is 100 and sequence is parallel"
+    labels:
+      test/feature: "Generic-App"
+      test/tags: "pod, series,pod-affected-percentage"
+      git/location: ""
+      test/status: "Done"      
+      
+  - tcid: TCID-EC2-GENERIC-APP-MULTIPLE-APP-DEPLOY
+    name: "TCID-EC2-GENERIC-APP-MULTIPLE-APP-DEPLOY"
+    description: "Test the app level experiment when pod is deployed with comman label"
+    labels:
+      test/feature: "Generic-App"
+      test/tags: "pod, multiple deployment"
+      git/location: ""
+      test/status: "Done"        
+      
+  - tcid: TCID-EC2-GENERIC-INFRA-POD-AUTOSCALER
+    name: "TCID-EC2-GENERIC-INFRA-POD-AUTOSCALER"
+    description: "Scale the application replicas and test the node autoscaling on cluster"
+    labels:
+      test/feature: "Generic-App"
+      test/tags: "pod, io, stress"
+      git/location: "https://github.com/litmuschaos/litmus-e2e/tree/gh-pages/generic-pipeline/pod-io-stress"
+      test/status: "Done"    
+      
+  - tcid: TCID-EC2-GENERIC-INFRA-WITH-APP-INFO
+    name: "TCID-EC2-GENERIC-INFRA-WITH-APP-INFO"
+    description: "Test the experiment with providing appinfo"
+    labels:
+      test/feature: "Generic-App"
+      test/tags: "pod, appinfo"
+      git/location: ""
+      test/status: "Done"       
+
+  # ----------------------------------------------------------
+  # Kubernetes Infra level chaos experiment BDDs
+  # ----------------------------------------------------------
+
+  - tcid: TCID-EC2-GENERIC-INFRA-NODE-CPU-HOG
+    name: "TCID-EC2-GENERIC-APP-NODE-CPU-HOG"
+    description: "Exhaust CPU resources on the Kubernetes Node"
+    labels:
+      test/feature: "Generic-Infra"
+      test/tags: "node, cpu, spike"
+      git/location: "https://github.com/litmuschaos/litmus-e2e/tree/gh-pages/generic-pipeline/disk-fill"
+      test/status: "Done" 
+
+  - tcid: TCID-EC2-GENERIC-INFRA-NODE-MEMORY-HOG
+    name: "TCID-EC2-GENERIC-INFRA-NODE-MEMORY-HOG"
+    description: "Exhaust Memory resources on the Kubernetes Node"
+    labels:
+      test/feature: "Generic-Infra"
+      test/tags: "node, memory, hog"
+      git/location: "https://github.com/litmuschaos/litmus-e2e/tree/gh-pages/generic-pipeline/node-memory-hog"
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GENERIC-INFRA-NODE-DRAIN
+    name: "TCID-EC2-GENERIC-INFRA-NODE-DRAIN"
+    description: "Drain the node where application pod is scheduled"
+    labels:
+      test/feature: "Generic-Infra"
+      test/tags: "node, drain"
+      git/location: "https://github.com/litmuschaos/litmus-e2e/tree/gh-pages/generic-pipeline/node-drain"
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GENERIC-INFRA-KUBELET-SERVICE-KILL
+    name: "TCID-EC2-GENERIC-INFRA-KUBELET-SERVICE-KILL"
+    description: "Kills the kubelet service on the application node to check the resiliency"
+    labels:
+      test/feature: "Generic-Infra"
+      test/tags: "kubelet, service, kill"
+      git/location: "https://github.com/litmuschaos/litmus-e2e/tree/gh-pages/generic-pipeline/kubelet-service-kill"
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GENERIC-INFRA-NODE-TAINT
+    name: "TCID-EC2-GENERIC-INFRA-NODE-TAINT"
+    description: "Taint the application node"
+    labels:
+      test/feature: "Generic-Infra"
+      test/tags: "node, taint"
+      git/location: "https://github.com/litmuschaos/litmus-e2e/tree/gh-pages/generic-pipeline/node-taint"
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GENERIC-INFRA-NODE-IO-STRESS
+    name: "TCID-EC2-GENERIC-INFRA-NODE-IO-STRESS"
+    description: "Give IO Stress on the Kubernetes Node"
+    labels:
+      test/feature: "Generic-Infra"
+      test/tags: "node, io, disk, stress"
+      git/location: "https://github.com/litmuschaos/litmus-e2e/tree/gh-pages/generic-pipeline/node-io-stress"
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GENERIC-INFRA-NODE-SELECTOR
+    name: "TCID-EC2-GENERIC-INFRA-NODE-SELECTOR"
+    description: "Node selector functionality for given target node or node label"
+    labels:
+      test/feature: "Generic-Infra"
+      test/tags: "node, selector"
+      git/location: "https://github.com/litmuschaos/litmus-e2e/tree/gh-pages/generic-pipeline/node-selector"
+
+  # -------------------------------------------------
+  # Kubernetes Kube AWS chaos experiment BDD Tests
+  # -------------------------------------------------   
+
+  - tcid: TCID-EC2-KubeAWS-INFRA-EC2-TERMINATE
+    name: "TCID-EC2-KubeAWS-INFRA-EC2-TERMINATE"
+    description: "Terminates an AWS EC2 instance"
+    labels:
+      test/feature: "kube-aws"
+      test/tags: "aws, ec2 terminate"
+      git/location: ""
+      test/status: "Done"
+
+  - tcid: TCID-EC2-KubeAWS-INFRA-EBS-LOSS
+    name: "TCID-EC2-KubeAWS-INFRA-EBS-LOSS"
+    description: "Detach an EBS volume"
+    labels:
+      test/feature: "kube-aws"
+      test/tags: "aws, ebs loss"
+      git/location: ""
+      test/status: "Not Done"
+
+  # -------------------------------------------------
+  # Kubernetes GCP chaos experiment BDD Tests
+  # -------------------------------------------------
+
+  - tcid: TCID-EC2-GCP-INFRA-VM-STOP
+    name: "TCID-EC2-GCP-INFRA-VM-STOP"
+    description: "Stop a GCP VM instance"
+    labels:
+      test/feature: "gcp"
+      test/tags: "gcp, vm stop"
+      git/location: ""
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GCP-INFRA-DISK-LOSS
+    name: "TCID-EC2-GCP-INFRA-DISK-LOSS"
+    description: "Detach a Disk Volume"
+    labels:
+      test/feature: "gcp"
+      test/tags: "gcp, disk loss"
+      git/location: ""
+      test/status: "Done"
+
+  # ----------------------------------------------------------
+  # LitmusChaos Ansible Experiments BDDs
+  # ----------------------------------------------------------    
+
+  - tcid: TCID-EC2-ANSIBLE-APP-POD-DELETE
+    name: "TCID-EC2-ANSIBLE-APP-POD-DELETE:"
+    description: "Delete the application pod"
+    labels:
+      test/feature: "Ansible-Experiment"
+      test/tags: "pod, delete"
+      git/location: ""
+      test/status: "Done"
+
+  - tcid: TCID-EC2-ANSIBLE-APP-CONTAINER-KILL
+    name: "TCID-EC2-ANSIBLE-APP-CONTAINER-KILL"
+    description: "Kill one container in the application pod"
+    labels:
+      test/feature: "Ansible-Experiment"
+      test/tags: "pod, container"
+      git/location: ""
+      test/status: "Done"
+
+  - tcid: TCID-EC2-ANSIBLE-APP-POD-CPU-HOG
+    name: "TCID-EC2-ANSIBLE-APP-POD-CPU-HOG"
+    description: "Consume CPU resources on the application container"
+    labels:
+      test/feature: "Ansible-Experiment"
+      test/tags: "pod, cpu,container"
+      git/location: ""
+      test/status: "Done"
+
+  - tcid: TCID-EC2-ANSIBLE-APP-POD-MEMORY-HOG
+    name: "TCID-EC2-ANSIBLE-APP-POD-MEMORY-HOG"
+    description: "Consume memory resources on the application container"
+    labels:
+      test/feature: "Ansible-Experiment"
+      test/tags: "pod, memory"
+      git/location: ""
+      test/status: "Done"
+
+  - tcid: TCID-EC2-ANSIBLE-APP-POD-NETWORK-CORRUPTION
+    name: "TCID-EC2-ANSIBLE-APP-POD-NETWORK-CORRUPTION"
+    description: "Inject Network Packet Corruption Into Application Pod"
+    labels:
+      test/feature: "Ansible-Experiment"
+      test/tags: "pod, network, corruption"
+      git/location: ""
+      test/status: "Done"
+
+  - tcid: TCID-EC2-ANSIBLE-APP-POD-NETWORK-LATENCY
+    name: "TCID-EC2-ANSIBLE-APP-POD-NETWORK-LATENCY"
+    description: "Inject Network Latency Into Application Pod"
+    labels:
+      test/feature: "Ansible-Experiment"
+      test/tags: "pod, network, latency"
+      git/location: ""
+      test/status: "Done"
+
+  - tcid: TCID-EC2-ANSIBLE-APP-POD-NETWORK-LOSS
+    name: "TCID-EC2-ANSIBLE-APP-POD-NETWORK-LOSS"
+    description: "Inject Packet Loss Into Application Pod"
+    labels:
+      test/feature: "Ansible-Experiment"
+      test/tags: "pod, network, loss"
+      git/location: ""
+      test/status: "Done"
+
+  - tcid: TCID-EC2-ANSIBLE-APP-POD-NETWORK-DUPLICATION
+    name: "TCID-EC2-ANSIBLE-APP-POD-NETWORK-DUPLICATION"
+    description: "Inject Network Duplication Into Application Pod"
+    labels:
+      test/feature: "Ansible-Experiment"
+      test/tags: "pod, network, duplication"
+      git/location: ""
+      test/status: "Not Done"
+
+  - tcid: TCID-EC2-ANSIBLE-APP-DISK-FILL
+    name: "TCID-EC2-ANSIBLE-APP-DISK-FILL"
+    description: "Fill up Ephemeral Storage of a Pod"
+    labels:
+      test/feature: "Ansible-Experiment"
+      test/tags: "pod, ephemeral, disk"
+      git/location: ""
+      test/status: "Done"      
+
+  - tcid: TCID-EC2-ANSIBLE-INFRA-NODE-CPU-HOG
+    name: "TCID-EC2-GENERIC-APP-NODE-CPU-HOG"
+    description: "Exhaust CPU resources on the Kubernetes Node"
+    labels:
+      test/feature: "Ansible-Experiment"
+      test/tags: "node, cpu, spike"
+      git/location: ""
+      test/status: "Done" 
+
+  - tcid: TCID-EC2-ANSIBLE-INFRA-NODE-MEMORY-HOG
+    name: "TCID-EC2-ANSIBLE-INFRA-NODE-MEMORY-HOG"
+    description: "Exhaust Memory resources on the Kubernetes Node"
+    labels:
+      test/feature: "Ansible-Experiment"
+      test/tags: "node, memory, hog"
+      git/location: ""
+      test/status: "Done"
+
+  - tcid: TCID-EC2-ANSIBLE-INFRA-NODE-DRAIN
+    name: "TCID-EC2-ANSIBLE-INFRA-NODE-DRAIN"
+    description: "Drain the node where application pod is scheduled"
+    labels:
+      test/feature: "Ansible-Experiment"
+      test/tags: "node, drain"
+      git/location: ""
+      test/status: "Done"
+
+  - tcid: TCID-EC2-ANSIBLE-INFRA-KUBELET-SERVICE-KILL
+    name: "TCID-EC2-ANSIBLE-INFRA-KUBELET-SERVICE-KILL"
+    description: "Kills the kubelet service on the application node to check the resiliency"
+    labels:
+      test/feature: "Ansible-Experiment"
+      test/tags: "kubelet, service, kill"
+      git/location: ""
+      test/status: "Done"
+
+  - tcid: TCID-EC2-ANSIBLE-INFRA-DISK-LOSS
+    name: "TCID-EC2-ANSIBLE-INFRA-DISK-LOSS"
+    description: "External disk loss from the node"
+    labels:
+      test/feature: "Ansible-Experiment"
+      test/tags: "disk, loss"
+      git/location: ""
+      test/status: "Not Done"
+
+  # ----------------------------------------------------------
+  # LitmusChaos COMPONENT BDDs
+  # ----------------------------------------------------------
+
+  - tcid: TCID-EC2-GENERIC-OPERATOR-RECONCILE-RESILIENCY
+    name: "TCID-EC2-GENERIC-OPERATOR-RECONCILE-RESILIENCY"
+    description: "Tests the Reconcile Resiliency of Litmus Operator"
+    labels:
+      test/feature: "Generic"
+      test/tags: "operator, litmus, resiliency"
+      git/location: ""
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GENERIC-OPERATOR-ADMIN-MODE
+    name: "TCID-EC2-GENERIC-OPERATOR-ADMIN-MODE"
+    description: "Test the admin mode functionality"
+    labels:
+      test/feature: "Generic"
+      test/tags: "admin-mode, operator, litmus"
+      git/location: ""
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GENERIC-ENGINE-APP-INFO
+    name: "TCID-EC2-GENERIC-ENGINE-APP-INFO"
+    description: "Test the app info functionality of chaosengine"
+    labels:
+      test/feature: "Generic"
+      test/tags: "app-ns, app-label, app-type, app-info"
+      git/location: ""
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GENERIC-ENGINE-SERVICE-ACCOUNT
+    name: "TCID-EC2-GENERIC-ENGINE-SERVICE-ACCOUNT"
+    description: "Test the service account field of chaosengine"
+    labels:
+      test/feature: "Generic"
+      test/tags: "service-account"
+      git/location: ""
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GENERIC-ENGINE-ANNOTATION-CHECK
+    name: "TCID-EC2-GENERIC-ENGINE-ANNOTATION-CHECK"
+    description: "Test the annotation check functionality of chaosengine"
+    labels:
+      test/feature: "Generic"
+      test/tags: "annotation-check"
+      git/location: ""
+      test/status: "Done"   
+
+  - tcid: TCID-EC2-GENERIC-ENGINE-EXPERIMENT-NAME
+    name: "TCID-EC2-GENERIC-ENGINE-EXPERIMENT-NAME"
+    description: "Test the experiment name field of chaosengine"
+    labels:
+      test/feature: "Generic"
+      test/tags: "experiment-name"
+      git/location: ""
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GENERIC-ENGINE-ENGINE-STATE
+    name: "TCID-EC2-GENERIC-ENGINE-ENGINE-STATE"
+    description: "Test the abort functionality of chaosengine"
+    labels:
+      test/feature: "Generic"
+      git/location: ""
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GENERIC-ENGINE-MONITORING
+    name: "TCID-EC2-GENERIC-ENGINE-MONITORING"
+    description: "Test the monitoring functionality of chaosengine"
+    labels:
+      test/feature: "Generic"
+      test/tags: "monitoring"
+      git/location: ""
+      test/status: "Not Done"
+
+  - tcid: TCID-EC2-GENERIC-ENGINE-ENV-VARIABLE
+    name: "TCID-EC2-GENERIC-ENGINE-ENV-VARIABLEY"
+    description: "Test the env variable field of chaosengine"
+    labels:
+      test/feature: "Generic"
+      test/tags: "env-variable-test"
+      git/location: ""
+      test/status: "Not Done"
+
+  - tcid: TCID-EC2-GENERIC-ENGINE-JOB-CLEANUP-POLICY
+    name: "TCID-EC2-GENERIC-ENGINE-JOB-CLEANUP-POLICY"
+    description: "Test the job cleanup policy functionality of chaosengine"
+    labels:
+      test/feature: "Generic"
+      test/tags: "job-cleanup-policy, retain, delete"
+      git/location: ""
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GENERIC-EXPERIMENT-EXPERIMENT-IMAGE-NAME
+    name: "TCID-EC2-GENERIC-EXPERIMENT-EXPERIMENT-IMAGE-NAME"
+    description: "Test the experiment image name field of chaosexperiment"
+    labels:
+      test/feature: "Generic"
+      test/tags: "image-name, chaosexperiment"
+      git/location: ""
+      test/status: "Done"
+
+  - tcid: TCID-EC2-GENERIC-EXPERIMENT-ENV-VARIABLE
+    name: "TCID-EC2-GENERIC-EXPERIMENT-ENV-VARIABLE"
+    description: "Test the experiment env variable field of chaosexperiment"
+    labels:
+      test/feature: "Generic"
+      test/tags: "envs, chaosexperiment"
+      git/location: ""
+      test/status: "Not Done"
+
+  - tcid: TCID-EC2-GENERIC-EXPERIMENT-ENTRY-POINT
+    name: "TCID-EC2-GENERIC-EXPERIMENT-ENTERY-POINT"
+    description: "Test the experiment entry point field of chaosexperiment"
+    labels:
+      test/feature: "Generic"
+      test/tags: "entry-point, chaosexperiment"
+      git/location: ""
+      test/status: "Not Done"
+
+  - tcid: TCID-EC2-GENERIC-EXPERIMENT-TARGET-POD
+    name: "TCID-EC2-GENERIC-EXPERIMENT-TARGET-POD"
+    description: "Test the experiment with given target pod"
+    labels:
+      test/feature: "Generic"
+      test/tags: "target-pod, experiment"
+      git/location: ""
+      test/status: "Done"  
+      
+
+  - tcid: TCID-EC2-GENERIC-ENV-FROM-SECRET-AND-CONFIGMAP
+    name: "TCID-EC2-GENERIC-ENV-FROM-SECRET-AND-CONFIGMAP"
+    description: "Test the experiment with envs from secret and configmap"
+    labels:
+      test/feature: "Generic"
+      test/tags: "crds, validation,secrets,configmaps"
+      git/location: ""
+      test/status: "Done"      
+
+  - tcid: TCID-EC2-GENERIC-RBAC-LESS-PERMISSION
+    name: "TCID-EC2-GENERIC-RBAC-LESS-PERMISSION"
+    description: "Test the experiment with less permission"
+    labels:
+      test/feature: "Generic"
+      test/tags: "rbac, permission"
+      git/location: ""
+      test/status: "Not Done"
