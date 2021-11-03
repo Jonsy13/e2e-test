@@ -28,8 +28,8 @@ export const apis = {
     return `${KUBE_API_SERVER}/api/v1/namespaces/${namespace}/pods`;
   },
 
-  getPodLogs: (podname, namespace) => {
-    return `${KUBE_API_SERVER}/api/v1/namespaces/${namespace}/pods/${podname}/log`;
+  getContainerLogs: (container, pod, namespace) => {
+    return `${KUBE_API_SERVER}/api/v1/namespaces/${namespace}/pods/${pod}/log?container=${container}`;
   },
 
   getPodByLabel: (namespace, label) => {
@@ -46,5 +46,5 @@ export const apis = {
 
   deleteDeployment: (namespace, name) => {
     return `${KUBE_API_SERVER}/apis/apps/v1/namespaces/${namespace}/deployments/${name}`;
-  }
+  },
 };
