@@ -54,7 +54,7 @@ describe("Running Debug Spec for getting status & logs of pods when any failure 
             "log",
             "------------------------------------------------------------------------------"
           );
-          cy.task("\n");
+          cy.task("log", "\n");
         });
       });
       cy.task("log", "Deactivating Debugger");
