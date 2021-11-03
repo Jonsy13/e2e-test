@@ -105,19 +105,19 @@ jobs:
           COMPONENTS: subscriber,chaos-exporter,chaos-operator-ce,event-tracker,workflow-controller
           NAMESPACE: ${{ env.CS_MODE_NAMESPACE }}
 
-      - name: Running Post-Authentication Tests
-        uses: cypress-io/github-action@v2
-        if: always()
-        continue-on-error: false
-        with:
-          spec: cypress/integration/Parallel_Tests/**/*.spec.js
-          working-directory: Cypress/
-          config-file: cypress.prod.json
-          env: true
-        env:
-          CYPRESS_BASE_URL: ${{ env.URL }}
-          CYPRESS_KUBE_API_TOKEN: ${{ env.KUBE_API_TOKEN }}
-          CYPRESS_KUBE_API_SERVER: ${{ env.KUBE_API_SERVER}}
+      # - name: Running Post-Authentication Tests
+      #   uses: cypress-io/github-action@v2
+      #   if: always()
+      #   continue-on-error: false
+      #   with:
+      #     spec: cypress/integration/Parallel_Tests/**/*.spec.js
+      #     working-directory: Cypress/
+      #     config-file: cypress.prod.json
+      #     env: true
+      #   env:
+      #     CYPRESS_BASE_URL: ${{ env.URL }}
+      #     CYPRESS_KUBE_API_TOKEN: ${{ env.KUBE_API_TOKEN }}
+      #     CYPRESS_KUBE_API_SERVER: ${{ env.KUBE_API_SERVER}}
 
       - name: Running Debug Tests
         uses: cypress-io/github-action@v2
@@ -244,19 +244,19 @@ jobs:
           COMPONENTS: subscriber,chaos-exporter,chaos-operator-ce,event-tracker,workflow-controller
           NAMESPACE: ${{ env.NS_MODE_NAMESPACE }}
 
-      - name: Running Post-Authentication Tests
-        uses: cypress-io/github-action@v2
-        if: always()
-        continue-on-error: false
-        with:
-          spec: cypress/integration/Parallel_Tests/**/*.spec.js
-          working-directory: Cypress/
-          config-file: cypress.prod.json
-          env: true
-        env:
-          CYPRESS_BASE_URL: ${{ env.URL }}
-          CYPRESS_KUBE_API_TOKEN: ${{ env.KUBE_API_TOKEN }}
-          CYPRESS_KUBE_API_SERVER: ${{ env.KUBE_API_SERVER}}
+      # - name: Running Post-Authentication Tests
+      #   uses: cypress-io/github-action@v2
+      #   if: always()
+      #   continue-on-error: false
+      #   with:
+      #     spec: cypress/integration/Parallel_Tests/**/*.spec.js
+      #     working-directory: Cypress/
+      #     config-file: cypress.prod.json
+      #     env: true
+      #   env:
+      #     CYPRESS_BASE_URL: ${{ env.URL }}
+      #     CYPRESS_KUBE_API_TOKEN: ${{ env.KUBE_API_TOKEN }}
+      #     CYPRESS_KUBE_API_SERVER: ${{ env.KUBE_API_SERVER}}
 
       - name: Running Debug Tests
         uses: cypress-io/github-action@v2

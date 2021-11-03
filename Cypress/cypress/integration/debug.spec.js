@@ -20,7 +20,7 @@ describe("Running Debug Spec for getting status & logs of pods when any failure 
         console.log("-----------------------------------------------------------------------------")
         console.log("Pod-Name : ", pod.metadata.name, " =======    Pod_status : ", pod.status.phase);
         cy.request({
-          url: apis.getPodlogs(pod.metadata.name,"litmus"),
+          url: apis.getPodLogs(pod.metadata.name,"litmus"),
           method: "GET",
           headers: {
             Authorization: `Bearer ${KUBE_API_TOKEN}`,
