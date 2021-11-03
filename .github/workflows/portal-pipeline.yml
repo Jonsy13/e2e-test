@@ -222,27 +222,27 @@ jobs:
           sudo mv litmusctl /usr/local/bin/litmusctl
           litmusctl version
 
-      - name: Running basic tests (Login and Onboarding Tests)
-        uses: cypress-io/github-action@v2
-        continue-on-error: false
-        with:
-          spec: cypress/integration/Basic_Setup/**/*.spec.js
-          working-directory: Cypress/
-          config-file: cypress.prod.json
-          env: true
-        env:
-          CYPRESS_BASE_URL: ${{ env.URL }}
+      # - name: Running basic tests (Login and Onboarding Tests)
+      #   uses: cypress-io/github-action@v2
+      #   continue-on-error: false
+      #   with:
+      #     spec: cypress/integration/Basic_Setup/**/*.spec.js
+      #     working-directory: Cypress/
+      #     config-file: cypress.prod.json
+      #     env: true
+      #   env:
+      #     CYPRESS_BASE_URL: ${{ env.URL }}
 
-      - name: Verifying the execution-plane components
-        if: always()
-        run: |
-          kubectl config use-context k3d-${{ env.SELF_AGENT }}
-          source ./litmus/utils.sh
-          verify_all_components ${COMPONENTS} ${NAMESPACE}
-          wait_for_pods ${NAMESPACE} 720
-        env:
-          COMPONENTS: subscriber,chaos-exporter,chaos-operator-ce,event-tracker,workflow-controller
-          NAMESPACE: ${{ env.NS_MODE_NAMESPACE }}
+      # - name: Verifying the execution-plane components
+      #   if: always()
+      #   run: |
+      #     kubectl config use-context k3d-${{ env.SELF_AGENT }}
+      #     source ./litmus/utils.sh
+      #     verify_all_components ${COMPONENTS} ${NAMESPACE}
+      #     wait_for_pods ${NAMESPACE} 720
+      #   env:
+      #     COMPONENTS: subscriber,chaos-exporter,chaos-operator-ce,event-tracker,workflow-controller
+      #     NAMESPACE: ${{ env.NS_MODE_NAMESPACE }}
 
       # - name: Running Post-Authentication Tests
       #   uses: cypress-io/github-action@v2
@@ -260,7 +260,7 @@ jobs:
 
       - name: Running Debug Tests
         uses: cypress-io/github-action@v2
-        if: ${{ failure() }}
+        # if: ${{ failure() }}
         continue-on-error: false
         with:
           spec: cypress/integration/debug.spec.js
