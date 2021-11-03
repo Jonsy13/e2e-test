@@ -4,7 +4,7 @@
 // can be accessed to get details of cluster resources.
 
 import { apis, KUBE_API_TOKEN } from "../kube-apis/apis";
-const namespace = "scope";
+const namespace = Cypress.env("NAMESPACE");
 
 describe("Running Debug Spec for getting status & logs of pods when any failure occurs", () => {
   const labels = [
@@ -57,7 +57,7 @@ describe("Running Debug Spec for getting status & logs of pods when any failure 
           cy.task("log", "\n");
         });
       });
-      cy.task("log", "Deactivating Debugger");
     });
+    cy.task("log", "Deactivating Debugger");
   });
 });
