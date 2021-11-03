@@ -6,8 +6,8 @@
 import { apis, KUBE_API_TOKEN } from "../kube-apis/apis";
 
 describe("Running Debug Spec for getting status & logs of pods when any failure occurs", () => {
-  it("getting pods ---->",()=> {
-    cy.log("Activating Debugger ---> ");
+  it("getting pods ---->", () => {
+    cy.task("log", "Activating Debugger ---> ");
     cy.request({
       url: apis.getPods("litmus"),
       method: "GET",
@@ -17,22 +17,31 @@ describe("Running Debug Spec for getting status & logs of pods when any failure 
     }).then((response) => {
       const pods = response.body.items;
       pods.map((pod) => {
-        console.log("-----------------------------------------------------------------------------")
-        console.log("Pod-Name : ", pod.metadata.name, " =======    Pod_status : ", pod.status.phase);
+        cy.task(
+          "log",
+          "-----------------------------------------------------------------------------"
+        );
+        cy.task(
+          "log",
+          `Pod-Name : ${pod.metadata.name}, ======= Pod_status : ${pod.status.phase}`
+        );
         cy.request({
-          url: apis.getPodLogs(pod.metadata.name,"litmus"),
+          url: apis.getPodLogs(pod.metadata.name, "litmus"),
           method: "GET",
           headers: {
             Authorization: `Bearer ${KUBE_API_TOKEN}`,
           },
         }).should((logs) => {
-          console.log(`logs for ${pod.metadata.name} pod are ------`)
-          console.log(logs.body)
-          console.log("\n");
+          cy.task("log", `logs for ${pod.metadata.name} pod are ------`);
+          cy.task("log", logs.body);
+          cy.task("log", "\n");
         });
-        console.log("------------------------------------------------------------------------------")
+        cy.task(
+          "log",
+          "------------------------------------------------------------------------------"
+        );
       });
     });
-    cy.log("Deactivating Debugger")
-  })
+    cy.task("log", "Deactivating Debugger");
+  });
 });
