@@ -28,6 +28,10 @@ export const apis = {
     return `${KUBE_API_SERVER}/api/v1/namespaces/${namespace}/pods`;
   },
 
+  getPodLogs: (podname, namespace) => {
+    return `${KUBE_API_SERVER}/api/v1/namespaces/${namespace}/pods/${podname}/log`;
+  },
+
   getPodByLabel: (namespace, label) => {
     return `${KUBE_API_SERVER}/api/v1/namespaces/${namespace}/pods?labelSelector=${label}`;
   },

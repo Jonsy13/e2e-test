@@ -9,7 +9,7 @@ describe("Running Debug Spec for getting status & logs of pods when any failure 
   it("getting pods ---->",()=> {
     cy.log("Activating Debugger ---> ");
     cy.request({
-      url: apis.getPods("kube-system"),
+      url: apis.getPods("litmus"),
       method: "GET",
       headers: {
         Authorization: `Bearer ${KUBE_API_TOKEN}`,
@@ -20,7 +20,7 @@ describe("Running Debug Spec for getting status & logs of pods when any failure 
         console.log("-----------------------------------------------------------------------------")
         console.log("Pod-Name : ", pod.metadata.name, " =======    Pod_status : ", pod.status.phase);
         cy.request({
-          url: apis.getPodlogs(pod.metadata.name,"kube-system"),
+          url: apis.getPodlogs(pod.metadata.name,"litmus"),
           method: "GET",
           headers: {
             Authorization: `Bearer ${KUBE_API_TOKEN}`,
