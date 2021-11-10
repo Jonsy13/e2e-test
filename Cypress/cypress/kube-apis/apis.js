@@ -24,12 +24,12 @@ export const apis = {
     return `${KUBE_API_SERVER}/apis/argoproj.io/v1alpha1/namespaces/${namespace}/workflows`;
   },
 
-  getPods: (namespace) => {
-    return `${KUBE_API_SERVER}/api/v1/namespaces/${namespace}/pods`;
+  getWorkflowByName: (workflowName, namespace) => {
+    return `${KUBE_API_SERVER}/apis/argoproj.io/v1alpha1/namespaces/${namespace}/workflows/${workflowName}`;
   },
 
-  getContainerLogs: (container, pod, namespace) => {
-    return `${KUBE_API_SERVER}/api/v1/namespaces/${namespace}/pods/${pod}/log?container=${container}`;
+  getPods: (namespace) => {
+    return `${KUBE_API_SERVER}/api/v1/namespaces/${namespace}/pods`;
   },
 
   getPodByLabel: (namespace, label) => {
@@ -46,5 +46,5 @@ export const apis = {
 
   deleteDeployment: (namespace, name) => {
     return `${KUBE_API_SERVER}/apis/apps/v1/namespaces/${namespace}/deployments/${name}`;
-  },
+  }
 };

@@ -1,5 +1,5 @@
 {
-  "baseUrl": "https://0.0.0.0:45751",
+  "baseUrl": "http://localhost:3001",
   "experimentalFetchPolyfill": true,
   "viewportWidth": 3840,
   "viewportHeight": 2160,
@@ -10,7 +10,7 @@
   "env": {
     "authURL": "http://localhost:3000",
     "apiURL": "http://localhost:8080",
-    "KUBE_API_SERVER": "https://0.0.0.0:45751",
-    "KUBE_API_TOKEN": "eyJhbGciOiJSUzI1NiIsImtpZCI6IlYzUDU4cGZ4MTFxZUxPMVA1cmtsV0hKelVyaHNvTW1ZQWp2dmpieHV2Tk0ifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImRlZmF1bHQtdG9rZW4tODVnejgiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiZGVmYXVsdCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImY3ZTU4ZTVhLWU2YTItNDg4MS1hMDgyLWRhZjQwOTI0OWQ3MyIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpkZWZhdWx0OmRlZmF1bHQifQ.UkIFu0q2NdihKOMKuGUf91aT6s0fEPdQc7ldo15aNaifjn18tePsdrqW7X7MnBssBoo8VhObuKSyQEJtA0cJ3jgkKAtUoMYGyw1LmUsNSRNLZnHDe8bEya2nY9jkVfzJg-zQGtXEW_28j7BnJ-xRLeFoHUdLUP266KY_0MYVxoeOPDGQBE021qZnlOia532AqMTikPsiHifQc9wXexTDjyhOrc8VROPIbVvd3t6l2dwWjfqrvekLVkc3nevOmZ4nrWvb0UQWbBNk5dkRVcFR8S886_HDFiQYMRGPXPfn99jUmq1G7auZBkj81YJFgUr4QLJA72IR0-3RsRyVRjkfqQ"
+    "KUBE_API_SERVER": "",
+    "KUBE_API_TOKEN": ""
   }
 }

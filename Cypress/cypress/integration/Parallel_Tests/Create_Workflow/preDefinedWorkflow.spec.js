@@ -2,7 +2,7 @@
 import * as user from "../../../fixtures/Users.json";
 import * as workflows from "../../../fixtures/Workflows.json";
 
-describe("Testing the workflow creation wizard using Templates", () => {
+describe("Testing the workflow creation wizard using PreDefined Experiments", () => {
 	before("Clearing the Cookies and deleting the Cookies", () => {
 		cy.requestLogin(user.AdminName, user.AdminPassword);
 		cy.waitForCluster("Self-Agent");
@@ -10,12 +10,20 @@ describe("Testing the workflow creation wizard using Templates", () => {
 	});
 
 	let workflowName = '';
+	let workflowNamespace = '';
 
 	it("Running PreDefined Workflow", () => {
 		cy.chooseAgent("Self-Agent");
+		cy.GraphqlWait("GetPredefinedWorkflowList", "getPredefinedData");
 		cy.get("[data-cy=ControlButtons] Button").eq(0).click();
-		cy.chooseWorkflow(0, 0);
+		
+		cy.wait("@getPredefinedData");
+		cy.chooseWorkflow(0, 1);
 
+		cy.get("[data-cy=WorkflowNamespace] input").then(($namespace) => {
+			workflowNamespace = $namespace.val();
+			return;
+		});
 		// Providing a name of 55 characters which should fail
 		// Maximum allowed length is 54 characters
 		cy.configureWorkflowSettings(
@@ -28,7 +36,7 @@ describe("Testing the workflow creation wizard using Templates", () => {
 
 		// Check if Alert exists
 		cy.get("[role=alert]").should("be.visible");
-
+		
 		// Provide the correct details
 		cy.configureWorkflowSettings(
 			workflows.nonRecurringworkflowName,
@@ -36,8 +44,40 @@ describe("Testing the workflow creation wizard using Templates", () => {
 			0
 		);
 		cy.get("[data-cy=ControlButtons] Button").eq(1).click();
-		cy.wait(1000); // Needs to be removed with frontend enhancement
+		cy.wait(3000);
 		cy.get("[data-cy=addExperimentSearch]").should("not.exist");
+		cy.get("table")
+			.find("tr")
+			.eq(1)
+			.then(($div) => {
+				cy.wrap($div)
+					.find("td")
+					.eq(0)
+					.should("contain.text", "podtato-main-pod-delete-chaos") // Matching Experiment
+					.click();
+			});
+		const workflowParameters = {
+			general : {
+				context : "podtato-main-pod-delete-chaos_litmus"
+			},
+			targetApp : {
+				annotationCheckToggle : false,
+				appns : "litmus",
+				appKind : "deployment",
+				appLabel : "name=podtato-main"
+			},
+			steadyState : {},
+			tuneExperiment : {
+				totalChaosDuration : 30,
+				chaosInterval : 10,
+				force : "false"
+			} 
+		  };
+		cy.validatePredefinedWorkflowParameters(workflowParameters);
+		// Expected nodes
+		const graphNodesNameArray = ["install-application", "install-chaos-experiments", "pod-delete", "revert-chaos", "delete-application"];
+		// Verify nodes in dagre graph
+		cy.validateGraphNodes(graphNodesNameArray);
 		cy.get("[data-cy=ControlButtons] Button").eq(1).click();
 		cy.rScoreEditor(5);
 		cy.get("[data-cy=ControlButtons] Button").eq(1).click();
@@ -52,12 +92,14 @@ describe("Testing the workflow creation wizard using Templates", () => {
 		cy.get("[data-cy=FinishModal]").should("be.visible");
 		cy.get("[data-cy=WorkflowName]").then(($name) => {
 			workflowName = $name.text();
-			cy.get('@workflowNamespace').then((workflowNamespace) => {
-				cy.validateWorkflowExistence(workflowName, workflowNamespace);
-			});
 			return;
 		});
 		cy.get("[data-cy=GoToWorkflowButton]").click();
+	});
+
+	it("Validating workflow existence and status on cluster", () => {
+		cy.validateWorkflowExistence(workflowName, workflowNamespace);
+		cy.validateWorkflowStatus(workflowName, workflowNamespace, ["Running"]);
 	});
 
 	it("Checking Workflow Browsing Table for scheduled workflow", () => {
@@ -75,14 +117,31 @@ describe("Testing the workflow creation wizard using Templates", () => {
 					.eq(2)
 					.should("have.text", workflowName); // Matching Workflow Name Regex
 				cy.wrap($div).find("td").eq(3).should("have.text", "Self-Agent"); // Matching Target Agent
-				// cy.wrap($div).find("td [data-cy=browseWorkflowOptions]").click(); // Clicking on 3 Dots
-				// cy.get("[data-cy=workflowDetails]").eq(0).click(); // Checking Workflow Graph And Other Details
+				cy.wrap($div).find("td").eq(2).click({ scrollBehavior: false });
 			});
+		cy.get("[data-cy=statsTabs]").find('button').eq(1).click();
+		cy.get("[data-cy=workflowNamespace]").should("have.text", workflowNamespace);
+		cy.waitUntil(() =>
+			cy.get("[data-cy=workflowStatus]").then((status) => {
+				return status.text() !== "Running" ? true : false;
+			}),
+			{
+				verbose: true,
+				interval: 500,
+				timeout: 600000,
+			}
+		);
+		cy.validateWorkflowStatus(workflowName, workflowNamespace, ["Running", "Failed"]);
+		cy.get("[data-cy=statsTabs]").find('button').eq(0).click();
+		// Expected Nodes
+		const graphNodesNameArray = [workflowName, "install-application", "install-chaos-experiments", "pod-network-loss", "revert-chaos", "delete-application"];
+		// Verify nodes in dagre graph (TODO: Check status of nodes)
+		cy.validateGraphNodes(graphNodesNameArray);
 	});
 
-	it("Saving the created workflow as a template", () => {
+	it("Checking Schedules Table for scheduled Workflow", () => {
 		cy.GraphqlWait("workflowListDetails", "listSchedules");
-		cy.GraphqlWait("addWorkflowTemplate", "addTemplate");
+		cy.visit("/workflows");
 		cy.get("[data-cy=browseSchedule]").click();
 		cy.wait("@listSchedules").its("response.statusCode").should("eq", 200);
 		cy.wait(1000);
@@ -96,46 +155,9 @@ describe("Testing the workflow creation wizard using Templates", () => {
 					.should("have.text", workflowName); // Matching Workflow Name Regex
 				cy.wrap($div).find("td").eq(1).should("have.text", "Self-Agent"); // Matching Target Agent
 			});
-		cy.get("[data-cy=browseScheduleOptions]").eq(0).click({ scrollBehavior: false });
-		cy.get("[data-cy=saveTemplate]")
-			.eq(0)
-			.should("have.text", "Save Template")
-			.click({ force: true });
-		cy.configureWorkflowSettings(
-			"e2e-test-template",
-			"e2e-test-template-description",
-			0
-		);
-		cy.get("[data-cy=saveTemplateButton]").should("be.visible").click();
-		cy.wait("@addTemplate").its("response.statusCode").should("eq", 200);
-		cy.get("[data-cy=templateAlert]").should("be.visible");
-		cy.wait(6000);
 	});
 
-	it("Scheduling a new workflow from the saved template", () => {
-		cy.visit("/create-workflow");
-		cy.chooseAgent("Self-Agent");
-		cy.get("[data-cy=ControlButtons] Button").eq(0).click();
-		cy.chooseWorkflow(1, 0);
-		cy.configureWorkflowSettings(
-			"test-schedule-template",
-			workflows.nonRecurringworkflowDescription,
-			0
-		);
-		cy.get("[data-cy=ControlButtons] Button").eq(1).click();
-		cy.wait(1000); // Needs to be removed with frontend enhancement
-		cy.get("[data-cy=ControlButtons] Button").eq(1).click();
-		cy.rScoreEditor(5);
-		cy.get("[data-cy=ControlButtons] Button").eq(1).click();
-		cy.selectSchedule(0);
-		cy.get("[data-cy=ControlButtons] Button").eq(1).click();
-		cy.verifyDetails(
-			"test-schedule-template",
-			workflows.nonRecurringworkflowDescription,
-			0
-		);
-		cy.get("[data-cy=ControlButtons] Button").eq(0).click(); // Clicking on finish Button
-		cy.get("[data-cy=FinishModal]").should("be.visible");
-		cy.get("[data-cy=GoToWorkflowButton]").click();
+	it("Validate Verdict, Resilience score and Experiments Passed", () => {
+		cy.validateVerdict(workflowName, "Self-Agent", "Failed", 0, 0, 1);
 	});
 });
