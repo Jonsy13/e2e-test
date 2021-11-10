@@ -1,0 +1,19 @@
+---------------------------------------------------
+
+Pods Status in litmus at 3 minute(s)
+
+NAME                                     READY   STATUS    RESTARTS   AGE
+litmusportal-frontend-74d456746f-r9mkn   1/1     Running   0          48m
+mongo-0                                  1/1     Running   0          48m
+litmusportal-server-6df9c5895d-g6sbc     2/2     Running   0          48m
+
+Nodes Status at 3 minute(s)
+
+NAME                STATUS   ROLES                  AGE   VERSION
+k3d-test-agent-2    Ready    <none>                 48m   v1.21.2+k3s1
+k3d-test-agent-1    Ready    <none>                 48m   v1.21.2+k3s1
+k3d-test-server-0   Ready    control-plane,master   48m   v1.21.2+k3s1
+k3d-test-agent-0    Ready    <none>                 48m   v1.21.2+k3s1
+
+---------------------------------------------------
+

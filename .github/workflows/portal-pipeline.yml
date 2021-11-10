@@ -109,7 +109,7 @@ jobs:
         run: |
           chmod 755 ./litmus/debug.sh
           ./litmus/debug.sh litmus &
-          ls
+          ls -lR
 
       # - name: Running Post-Authentication Tests
       #   uses: cypress-io/github-action@v2
@@ -153,7 +153,7 @@ jobs:
       - uses: actions/upload-artifact@v1
         with:
           name: debugfile
-          path: litmus/debugFile.txt
+          path: debugFile.txt
 
   # Namespaced-Scope-Mode:
   #   runs-on: ubuntu-20.04
