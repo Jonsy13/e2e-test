@@ -190,7 +190,7 @@ describe("Testing the workflow schedule on a recurring basis with a target appli
       "revert-chaos",
     ];
     // Verify nodes in dagre graph (TODO: Check status of nodes)
-    cy.validateGraphNodes(graphNodesNameArray);
+    // cy.validateGraphNodes(graphNodesNameArray);
   });
 
   it("Validate Verdict, Resilience score and Experiments Passed", () => {
