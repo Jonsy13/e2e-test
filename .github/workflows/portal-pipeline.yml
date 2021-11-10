@@ -108,7 +108,7 @@ jobs:
       - name: Running Debug Script in background
         run: |
           chmod 755 ./litmus/debug.sh
-          ./litmus/debug.sh litmus &&
+          ./litmus/debug.sh litmus &
 
       # - name: Running Post-Authentication Tests
       #   uses: cypress-io/github-action@v2
@@ -134,20 +134,20 @@ jobs:
 
       # TODO: Additional Tests will be added from here
 
-      - name: Portal Cleanup
-        if: always()
-        run: |
-          kubectl config use-context k3d-${{ env.SELF_AGENT }}
-          chmod 755 ./litmus/uninstall-portal.sh
-          ./litmus/uninstall-portal.sh
-        env:
-          PORTAL_VERSION: ${{ env.TAG }}
+      # - name: Portal Cleanup
+      #   if: always()
+      #   run: |
+      #     kubectl config use-context k3d-${{ env.SELF_AGENT }}
+      #     chmod 755 ./litmus/uninstall-portal.sh
+      #     ./litmus/uninstall-portal.sh
+      #   env:
+      #     PORTAL_VERSION: ${{ env.TAG }}
 
-      - uses: actions/upload-artifact@v1
-        if: failure()
-        with:
-          name: cypress-screenshots
-          path: Cypress/cypress/screenshots
+      # - uses: actions/upload-artifact@v1
+      #   if: failure()
+      #   with:
+      #     name: cypress-screenshots
+      #     path: Cypress/cypress/screenshots
 
       - uses: actions/upload-artifact@v1
         with:
