@@ -24,5 +24,8 @@ Cypress.Commands.add("requestLogin", (loginName, loginPassword) => {
       cy.setCookie("litmus-cc-token", res.access_token);
     });
   cy.wait(500);
+  cy.location().then((loc) => {
+    loc.pathname === '/getStarted' ? cy.getStarted(loginPassword) : null;
+  })
   cy.visit("/");
 });
