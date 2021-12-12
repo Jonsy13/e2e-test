@@ -3,7 +3,7 @@ import * as user from "../../fixtures/Users.json";
 
 export const agent = Cypress.env("AGENT");
 
-describe("Testing CRUD operation with MyHub", () => {
+describe(["myhub"],"Testing CRUD operation with MyHub", () => {
 	before(
 		"Clearing the cookies, login as admin and visiting the MyHub route",
 		() => {

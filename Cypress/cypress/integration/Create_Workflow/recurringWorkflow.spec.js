@@ -5,7 +5,7 @@ export const workflowNamespace = Cypress.env("AGENT_NAMESPACE");
 export const agent = Cypress.env("AGENT");
 export const targetAppNamespace = Cypress.env("TARGET_APP_NS");
 
-describe("Testing the workflow schedule on a recurring basis with a target application", () => {
+describe(["recurring-workflow-scheduling"],"Testing the workflow schedule on a recurring basis with a target application", () => {
 	before("Loggin in and checking if agent exists", () => {
 		cy.requestLogin(user.AdminName, user.AdminPassword);
 		cy.waitForCluster(agent);

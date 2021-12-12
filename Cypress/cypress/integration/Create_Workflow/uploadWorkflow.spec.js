@@ -5,7 +5,7 @@ export const workflowNamespace = Cypress.env("AGENT_NAMESPACE");
 export const agent = Cypress.env("AGENT");
 export const targetAppNamespace = Cypress.env("TARGET_APP_NS");
 
-describe("Testing the upload Workflow with correct workflow manifest and target application", () => {
+describe(["upload-workflow-scheduling"],"Testing the upload Workflow with correct workflow manifest and target application", () => {
   before("Clearing the Cookies and deleting the Cookies", () => {
     cy.requestLogin(user.AdminName, user.AdminPassword);
     cy.waitForCluster(agent);

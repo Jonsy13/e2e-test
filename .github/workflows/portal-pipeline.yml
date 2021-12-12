@@ -14,7 +14,7 @@ env:
   MODULE: "${{github.event.inputs.Module}}"
   SELF_AGENT: "self-agent"
   CS_MODE_NAMESPACE: "litmus"
-  NS_MODE_NAMESPACE: "scope"
+  NS_MODE_NAMESPACE: "default"
   EXTERNAL_AGENT: "external-agent"
 
 # Jobs for deploying and testing litmus-portal on a KinD Cluster
@@ -24,20 +24,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        AccessType: [NodePort]
+        AccessType: [NodePort, LoadBalancer, Ingress]
         TestTag: 
           - login
           - getstarted
           - account-settings
           - teaming
           - users-management
-          - custom-workflow
-          - template-workflow
-          - predefined-workflow
-          - recurring-workflow
-          - upload-workflow
-          - gitops-workflow
-          - workflow-crud-ops 
+          - custom-workflow-scheduling 
+          - template-workflow-scheduling 
+          - predefined-workflow-scheduling 
+          - recurring-workflow-scheduling 
+          - upload-workflow-scheduling 
+          - gitops-workflow-scheduling 
+          - workflow-scheduling-crud-ops 
           - data-source
           - myhub
           - routing
@@ -46,11 +46,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: AbsaOSS/k3d-action@v1.5.0
+      - uses: AbsaOSS/k3d-action@v2
         name: Create 1st Cluster
         with:
           cluster-name: ${{ env.SELF_AGENT }}
-          args: --agents 4
+          args: >
+            --agents 3
+            --k3s-arg "--no-deploy=traefik, metrics-server@server:*"
 
       - name: Configuring and Testing the Cluster Installation
         run: |
@@ -69,7 +71,9 @@ jobs:
           INSTALLATION_MODE: "CS-MODE"
 
       # Fetching Access Point & Token for accessing kube api server
-      - run: |
+      - name: Configuring Kube-Api server
+        if: contains(${{ matrix.TestTag }}, "scheduling") || contains(${{ matrix.TestTag }}, "datasource") || contains(${{ matrix.TestTag }}, "dashboard")
+        run: |
           kubectl config view -o jsonpath='{"Cluster name\tServer\n"}{range .clusters[*]}{.name}{"\t"}{.cluster.server}{"\n"}{end}'
           export CLUSTER_NAME=k3d-${SELF_AGENT}
           KUBE_API_SERVER=$(kubectl config view -o jsonpath="{.clusters[?(@.name==\"$CLUSTER_NAME\")].cluster.server}")
@@ -77,31 +81,29 @@ jobs:
           echo "KUBE_API_SERVER=$KUBE_API_SERVER" >> $GITHUB_ENV
           echo "KUBE_API_TOKEN=$KUBE_API_TOKEN" >> $GITHUB_ENV
 
+      - name: Deploying Prometheus as a DataSource
+        if: contains(${{ matrix.TestTag }}, "data-source") || contains(${{ matrix.TestTag }}, "dashboard")
+        run: |
+          mkdir monitoring && cd monitoring
+          git clone https://github.com/litmuschaos/litmus.git && cd litmus/monitoring
+          kubectl create ns monitoring
+          kubectl -n monitoring apply -f utils/prometheus/prometheus-scrape-configuration/
+          kubectl -n monitoring apply -f utils/metrics-exporters/node-exporter/
+          kubectl -n monitoring apply -f utils/metrics-exporters/kube-state-metrics/
+          source ../../../litmus/utils.sh
+          wait_for_pods monitoring 720
+          wait_for_loadbalancer prometheus-k8s monitoring
+          loadBalancerIP=$(kubectl get services prometheus-k8s -n monitoring -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+          DATA_SOURCE="http://$loadBalancerIP:9090"
+          echo "DATA_SOURCE_URL=$DATA_SOURCE" >> $GITHUB_ENV
+
       # RBAC for allowing Cypress Runner to access Cluster resources
-      - run: |
+      - name: Setting RBAC for Cypress for running e2e tests
+        if: contains(${{ matrix.TestTag }}, "scheduling") || contains(${{ matrix.TestTag }}, "datasource") || contains(${{ matrix.TestTag }}, "dashboard")
+        run: |
           kubectl apply -f Cypress/cypress-rbac.yml
 
-      # - uses: AbsaOSS/k3d-action@v1.5.0
-      #   name: Create 2nd Cluster
-      #   with:
-      #     cluster-name: ${{ env.EXTERNAL_AGENT }}
-      #     args: --agents 1
-
-      # - name: Configuring and Testing the Agent Installation
-      #   run: |
-      #     kubectl cluster-info --context k3d-${{ env.EXTERNAL_AGENT }}
-      #     kubectl get nodes
-      #     kubectl get pods -n kube-system
-
-      # - name: Installing LitmusCTL on Agent Cluster
-      #   run: |
-      #     curl -O https://litmusctl-bucket.s3-eu-west-1.amazonaws.com/litmusctl-linux-amd64-master.tar.gz
-      #     tar -zxvf litmusctl-linux-amd64-master.tar.gz
-      #     chmod +x litmusctl
-      #     sudo mv litmusctl /usr/local/bin/litmusctl
-      #     litmusctl version
-
-      - name: Running basic tests (Login and Onboarding Tests)
+      - name: Running tests with tag -> ${{ matrix.TestTag }} with ${{ nmatrix.AccessType }} type service
         uses: cypress-io/github-action@v2
         continue-on-error: false
         with:
@@ -111,6 +113,12 @@ jobs:
         env:
           CYPRESS_BASE_URL: ${{ env.URL }}
           CYPRESS_INCLUDE_TAGS: ${{ matrix.TestTag }}
+          CYPRESS_KUBE_API_TOKEN: ${{ env.KUBE_API_TOKEN }}
+          CYPRESS_KUBE_API_SERVER: ${{ env.KUBE_API_SERVER}}
+          CYPRESS_AGENT_NAMESPACE: ${{ env.CS_MODE_NAMESPACE}}
+          CYPRESS_AGENT: "Self-Agent"
+          CYPRESS_TARGET_APP_NS: "default"
+          CYPRESS_DATA_SOURCE_URL: ${{ env.DATA_SOURCE_URL }}
 
       # - name: Verifying the execution-plane components
       #   if: always()
@@ -123,27 +131,6 @@ jobs:
       #     COMPONENTS: subscriber,chaos-exporter,chaos-operator-ce,event-tracker,workflow-controller
       #     NAMESPACE: ${{ env.CS_MODE_NAMESPACE }}
 
-      # - name: Running Post-Authentication Tests
-      #   uses: cypress-io/github-action@v2
-      #   if: always()
-      #   continue-on-error: false
-      #   with:
-      #     spec: cypress/integration/Parallel_Tests/**/*.spec.js
-      #     working-directory: Cypress/
-      #     config-file: cypress.prod.json
-      #     env: true
-      #   env:
-      #     CYPRESS_BASE_URL: ${{ env.URL }}
-      #     CYPRESS_KUBE_API_TOKEN: ${{ env.KUBE_API_TOKEN }}
-      #     CYPRESS_KUBE_API_SERVER: ${{ env.KUBE_API_SERVER}}
-
-      # - name: Registering External Agent in Cluster Mode
-      #   if: always()
-      #   run: |
-      #     kubectl config use-context k3d-${{ env.EXTERNAL_AGENT }}
-      #     sudo apt-get install expect
-      #     chmod 755 litmus/litmusctl-register.sh
-      #     litmus/litmusctl-register.sh "$URL" 1
 
       # TODO: Additional Tests will be added from here
 
@@ -159,131 +146,5 @@ jobs:
       - uses: actions/upload-artifact@v1
         if: failure()
         with:
-          name: cypress-screenshots
+          name: Cluster-Scope-Mode-${{ matrix.AccessType }}-${{ matrix.TestTag }}-screenshots
           path: Cypress/cypress/screenshots
-
-  # Namespaced-Scope-Mode:
-  #   runs-on: ubuntu-20.04
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       AcessType: [NodePort, Ingress, LoadBalancer]
-  #   steps:
-  #     - uses: actions/checkout@v2
-
-  #     - uses: AbsaOSS/k3d-action@v1.5.0
-  #       name: Create 1st Cluster
-  #       with:
-  #         cluster-name: ${{ env.SELF_AGENT }}
-  #         args: --agents 3
-
-  #     - name: Configuring and Testing the Cluster Installation
-  #       run: |
-  #         kubectl cluster-info --context k3d-${{ env.SELF_AGENT }}
-  #         kubectl get nodes
-  #         kubectl get pods -n kube-system
-
-  #     - name: Deploying Litmus-Portal using **k8s-manifest**
-  #       run: |
-  #         chmod 755 ./litmus/install-portal.sh
-  #         ./litmus/install-portal.sh
-  #       env:
-  #         PORTAL_VERSION: ${{ env.TAG }}
-  #         ACCESS_TYPE: ${{ matrix.AcessType }}
-  #         NAMESPACE: ${{ env.NS_MODE_NAMESPACE }}
-  #         INSTALLATION_MODE: "NS-MODE"
-
-  #     # Fetching Access Point & Token for accessing kube api server
-  #     - run: |
-  #         kubectl config view -o jsonpath='{"Cluster name\tServer\n"}{range .clusters[*]}{.name}{"\t"}{.cluster.server}{"\n"}{end}'
-  #         export CLUSTER_NAME=k3d-${SELF_AGENT}
-  #         KUBE_API_SERVER=$(kubectl config view -o jsonpath="{.clusters[?(@.name==\"$CLUSTER_NAME\")].cluster.server}")
-  #         KUBE_API_TOKEN=$(kubectl get secrets -o jsonpath="{.items[?(@.metadata.annotations['kubernetes\.io/service-account\.name']=='default')].data.token}"|base64 --decode)
-  #         echo "KUBE_API_SERVER=$KUBE_API_SERVER" >> $GITHUB_ENV
-  #         echo "KUBE_API_TOKEN=$KUBE_API_TOKEN" >> $GITHUB_ENV
-
-  #     # RBAC for allowing Cypress Runner to access Cluster resources
-  #     - run: |
-  #         kubectl apply -f Cypress/cypress-rbac.yml
-
-  #     - uses: AbsaOSS/k3d-action@v1.5.0
-  #       name: Create 2nd Cluster
-  #       with:
-  #         cluster-name: ${{ env.EXTERNAL_AGENT }}
-  #         args: --agents 1
-
-  #     - name: Configuring and Testing the Agent Installation
-  #       run: |
-  #         kubectl cluster-info --context k3d-${{ env.EXTERNAL_AGENT }}
-  #         kubectl get nodes
-  #         kubectl get pods -n kube-system
-
-  #     - name: Installing LitmusCTL on Agent Cluster
-  #       run: |
-  #         curl -O https://litmusctl-bucket.s3-eu-west-1.amazonaws.com/litmusctl-linux-amd64-master.tar.gz
-  #         tar -zxvf litmusctl-linux-amd64-master.tar.gz
-  #         chmod +x litmusctl
-  #         sudo mv litmusctl /usr/local/bin/litmusctl
-  #         litmusctl version
-
-  #     - name: Running basic tests (Login and Onboarding Tests)
-  #       uses: cypress-io/github-action@v2
-  #       continue-on-error: false
-  #       with:
-  #         spec: cypress/integration/Basic_Setup/**/*.spec.js
-  #         working-directory: Cypress/
-  #         config-file: cypress.prod.json
-  #         env: true
-  #       env:
-  #         CYPRESS_BASE_URL: ${{ env.URL }}
-
-  #     - name: Verifying the execution-plane components
-  #       if: always()
-  #       run: |
-  #         kubectl config use-context k3d-${{ env.SELF_AGENT }}
-  #         source ./litmus/utils.sh
-  #         verify_all_components ${COMPONENTS} ${NAMESPACE}
-  #         wait_for_pods ${NAMESPACE} 720
-  #       env:
-  #         COMPONENTS: subscriber,chaos-exporter,chaos-operator-ce,event-tracker,workflow-controller
-  #         NAMESPACE: ${{ env.NS_MODE_NAMESPACE }}
-
-  #     - name: Running Post-Authentication Tests
-  #       uses: cypress-io/github-action@v2
-  #       if: always()
-  #       continue-on-error: false
-  #       with:
-  #         spec: cypress/integration/Parallel_Tests/**/*.spec.js
-  #         working-directory: Cypress/
-  #         config-file: cypress.prod.json
-  #         env: true
-  #       env:
-  #         CYPRESS_BASE_URL: ${{ env.URL }}
-  #         CYPRESS_KUBE_API_TOKEN: ${{ env.KUBE_API_TOKEN }}
-  #         CYPRESS_KUBE_API_SERVER: ${{ env.KUBE_API_SERVER}}
-
-  #     # - name: Registering External Agent in Cluster Mode
-  #     #   if: always()
-  #     #   run: |
-  #     #     kubectl config use-context k3d-${{ env.EXTERNAL_AGENT }}
-  #     #     sudo apt-get install expect
-  #     #     chmod 755 litmus/litmusctl-register.sh
-  #     #     litmus/litmusctl-register.sh "http://localhost:3001" 1
-
-  #     # TODO: Additional Tests will be added from here
-
-  #     - name: Portal Cleanup
-  #       if: always()
-  #       run: |
-  #         kubectl config use-context k3d-${{ env.SELF_AGENT }}
-  #         chmod 755 ./litmus/uninstall-portal-namespaced.sh
-  #         ./litmus/uninstall-portal-namespaced.sh
-  #       env:
-  #         PORTAL_VERSION: ${{ env.TAG }}
-  #         PORTAL_NAMESPACE: ${{ env.NS_MODE_NAMESPACE }}
-
-  #     - uses: actions/upload-artifact@v1
-  #       if: failure()
-  #       with:
-  #         name: cypress-screenshots
-  #         path: Cypress/cypress/screenshots

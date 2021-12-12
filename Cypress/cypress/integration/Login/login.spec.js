@@ -1,7 +1,7 @@
 /// <reference types='cypress-tags' />
 
 let user;
-describe("Testing the accessibility of Login page", () => {
+describe(["login"],"Testing the accessibility of Login page", () => {
   it("Visiting the Login Page", () => {
     cy.clearCookie("litmus-cc-token");
     indexedDB.deleteDatabase("localforage");
@@ -11,7 +11,7 @@ describe("Testing the accessibility of Login page", () => {
   });
 });
 
-describe("Checking functionality of Login Page", () => {
+describe(["login"],"Checking functionality of Login Page", () => {
   beforeEach("Visit Login Page", () => {
     cy.clearCookie("litmus-cc-token");
     indexedDB.deleteDatabase("localforage");

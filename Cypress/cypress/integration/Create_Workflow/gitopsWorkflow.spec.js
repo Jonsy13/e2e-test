@@ -3,7 +3,7 @@ import * as user from "../../fixtures/Users.json";
 
 export const agent = Cypress.env("AGENT");
 
-describe("Testing the create Workflow Utility", () => {
+describe(["gitops-workflow-scheduling"],"Testing the create Workflow Utility", () => {
   before("Clearing the Cookies and deleting the Cookies", () => {
     cy.requestLogin(user.AdminName, user.AdminPassword);
     cy.waitForCluster(agent);

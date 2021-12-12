@@ -4,7 +4,7 @@ import * as user from "../../fixtures/Users.json";
 export const agent = Cypress.env("AGENT");
 export const dataSourceUrl = Cypress.env("DATA_SOURCE_URL");
 
-describe("Testing the addition of data source", () => {
+describe(["data-source"],"Testing the addition of data source", () => {
   before("Clearing the Cookies and deleting the Cookies", () => {
     cy.requestLogin(user.AdminName, user.AdminPassword);
     cy.waitForCluster(agent);

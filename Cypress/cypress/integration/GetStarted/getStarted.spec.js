@@ -1,7 +1,7 @@
 /// <reference types='cypress-tags' />
 import * as user from "../../fixtures/Users.json";
 
-describe("Testing the accessibility of Getting Started Page", () => {
+describe(["getstarted"],"Testing the accessibility of Getting Started Page", () => {
   before("Clearing local storage", () => {
     cy.clearCookie("litmus-cc-token");
     indexedDB.deleteDatabase("localforage");

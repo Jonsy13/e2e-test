@@ -1,6 +1,6 @@
 /// <reference types='cypress-tags' />
 let user;
-describe("Testing the routes functionality without Login [ Must redirect to Login Page ]", () => {
+describe(["routing"],"Testing the routes functionality without Login [ Must redirect to Login Page ]", () => {
   context("Testing Routes without login", () => {
     ["workflow", "homepage", "community", "unknown"].map((page) => {
       it("Visiting the " + page + " page without login", () => {
@@ -13,7 +13,7 @@ describe("Testing the routes functionality without Login [ Must redirect to Logi
   });
 });
 
-describe("Testing the routes with login [Must redirect to known required page or 404 for unknown page]", () => {
+describe(["routing"],"Testing the routes with login [Must redirect to known required page or 404 for unknown page]", () => {
   before("Login in to Web App", () => {
     indexedDB.deleteDatabase("localforage");
     cy.visit("/");

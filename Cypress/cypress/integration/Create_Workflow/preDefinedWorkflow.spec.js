@@ -6,7 +6,7 @@ export const workflowNamespace = Cypress.env("AGENT_NAMESPACE");
 export const agent = Cypress.env("AGENT");
 export const targetAppNamespace = Cypress.env("TARGET_APP_NS");
 
-describe("Testing the workflow creation wizard using PreDefined Experiments", () => {
+describe(["predefined-workflow-scheduling"],"Testing the workflow creation wizard using PreDefined Experiments", () => {
 	before("Clearing the Cookies and deleting the Cookies", () => {
 		cy.requestLogin(user.AdminName, user.AdminPassword);
 		cy.waitForCluster(agent);
