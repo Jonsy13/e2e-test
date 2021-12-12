@@ -19,14 +19,14 @@
 const { rmdir } = require('fs');
 const tagify = require('cypress-tags');
 
-module.exports = (on, config) => {
-  on('file:preprocessor', tagify(config));
-};
-
 
 module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
+  //Plugin for selecting tags
+  on('file:preprocessor', tagify(config));
+
+  // Task for deleting a folder
   on('task', {
     deleteFolder(folderName) {
       console.log('deleting folder %s', folderName)
