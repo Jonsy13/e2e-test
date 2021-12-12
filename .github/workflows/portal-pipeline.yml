@@ -25,7 +25,24 @@ jobs:
       fail-fast: false
       matrix:
         AccessType: [NodePort]
-        TestTag: [account-settings, teaming, users-management]
+        TestTag: 
+          - login
+          - getstarted
+          - account-settings
+          - teaming
+          - users-management
+          - custom-workflow
+          - template-workflow
+          - predefined-workflow
+          - recurring-workflow
+          - upload-workflow
+          - gitops-workflow
+          - workflow-crud-ops 
+          - data-source
+          - myhub
+          - routing
+          - workflow-stats
+
     steps:
       - uses: actions/checkout@v2
 
