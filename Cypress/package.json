@@ -24,5 +24,7 @@
     "cypress-file-upload": "^5.0.7",
     "cypress-wait-until": "^1.7.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "cypress-tags": "^0.3.0"
+  }
 }

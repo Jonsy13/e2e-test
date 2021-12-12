@@ -24,7 +24,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        AcessType: [LoadBalancer]
+        AccessType: [NodePort]
+        TestTag: [account-settings, teaming, users-management]
     steps:
       - uses: actions/checkout@v2
 
@@ -87,43 +88,37 @@ jobs:
         uses: cypress-io/github-action@v2
         continue-on-error: false
         with:
-          spec: cypress/integration/Basic_Setup/**/*.spec.js
           working-directory: Cypress/
           config-file: cypress.prod.json
           env: true
         env:
           CYPRESS_BASE_URL: ${{ env.URL }}
+          CYPRESS_INCLUDE_TAGS: ${{ matrix.TestTag }}
 
-      - name: Verifying the execution-plane components
-        if: always()
-        run: |
-          kubectl config use-context k3d-${{ env.SELF_AGENT }}
-          source ./litmus/utils.sh
-          verify_all_components ${COMPONENTS} ${NAMESPACE}
-          wait_for_pods ${NAMESPACE} 720
-        env:
-          COMPONENTS: subscriber,chaos-exporter,chaos-operator-ce,event-tracker,workflow-controller
-          NAMESPACE: ${{ env.CS_MODE_NAMESPACE }}
+      # - name: Verifying the execution-plane components
+      #   if: always()
+      #   run: |
+      #     kubectl config use-context k3d-${{ env.SELF_AGENT }}
+      #     source ./litmus/utils.sh
+      #     verify_all_components ${COMPONENTS} ${NAMESPACE}
+      #     wait_for_pods ${NAMESPACE} 720
+      #   env:
+      #     COMPONENTS: subscriber,chaos-exporter,chaos-operator-ce,event-tracker,workflow-controller
+      #     NAMESPACE: ${{ env.CS_MODE_NAMESPACE }}
 
-      - name: Running Debug Script in background
-        run: |
-          chmod 755 ./litmus/debug.sh
-          ./litmus/debug.sh litmus &
-          ls -lR
-
-      - name: Running Post-Authentication Tests
-        uses: cypress-io/github-action@v2
-        if: always()
-        continue-on-error: false
-        with:
-          spec: cypress/integration/Parallel_Tests/**/*.spec.js
-          working-directory: Cypress/
-          config-file: cypress.prod.json
-          env: true
-        env:
-          CYPRESS_BASE_URL: ${{ env.URL }}
-          CYPRESS_KUBE_API_TOKEN: ${{ env.KUBE_API_TOKEN }}
-          CYPRESS_KUBE_API_SERVER: ${{ env.KUBE_API_SERVER}}
+      # - name: Running Post-Authentication Tests
+      #   uses: cypress-io/github-action@v2
+      #   if: always()
+      #   continue-on-error: false
+      #   with:
+      #     spec: cypress/integration/Parallel_Tests/**/*.spec.js
+      #     working-directory: Cypress/
+      #     config-file: cypress.prod.json
+      #     env: true
+      #   env:
+      #     CYPRESS_BASE_URL: ${{ env.URL }}
+      #     CYPRESS_KUBE_API_TOKEN: ${{ env.KUBE_API_TOKEN }}
+      #     CYPRESS_KUBE_API_SERVER: ${{ env.KUBE_API_SERVER}}
 
       # - name: Registering External Agent in Cluster Mode
       #   if: always()
@@ -149,12 +144,6 @@ jobs:
         with:
           name: cypress-screenshots
           path: Cypress/cypress/screenshots
-
-      - uses: actions/upload-artifact@v1
-        if: failure()
-        with:
-          name: debugfile
-          path: debugFile.txt
 
   # Namespaced-Scope-Mode:
   #   runs-on: ubuntu-20.04

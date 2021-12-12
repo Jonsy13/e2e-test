@@ -15,14 +15,31 @@
 /**
  * @type {Cypress.PluginConfig}
  */
+
+const { rmdir } = require('fs');
+const tagify = require('cypress-tags');
+
+module.exports = (on, config) => {
+  on('file:preprocessor', tagify(config));
+};
+
+
 module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
+  on('task', {
+    deleteFolder(folderName) {
+      console.log('deleting folder %s', folderName)
 
-  on("task", {
-    log(message) {
-      console.log(message);
-      return null;
+      return new Promise((resolve, reject) => {
+        rmdir(folderName, { maxRetries: 10, recursive: true }, (err) => {
+          if (err) {
+            console.error(err)
+            return reject(err)
+          }
+          resolve(null)
+        })
+      })
     },
-  });
-};
+  })
+}

@@ -6,7 +6,7 @@
 // For Settings the ENVs, refer https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/#without-kubectl-proxy
 
 // Also, RBAC needs to be applied on the cluster for allowing Cypress to access the api-server
-// using default namespace.
+// using provided namespace.
 
 /* For quick setup of rbac & to get envs, 
     chmod +x kube-api-config.sh (in cypress root directory)
@@ -24,8 +24,16 @@ export const apis = {
     return `${KUBE_API_SERVER}/apis/argoproj.io/v1alpha1/namespaces/${namespace}/workflows`;
   },
 
+  getCronWorkflows: (namespace) => {
+    return `${KUBE_API_SERVER}/apis/argoproj.io/v1alpha1/namespaces/${namespace}/cronworkflows`;
+  },
+
   getWorkflowByName: (workflowName, namespace) => {
     return `${KUBE_API_SERVER}/apis/argoproj.io/v1alpha1/namespaces/${namespace}/workflows/${workflowName}`;
+  },
+
+  getCronWorkflowByName: (workflowName, namespace) => {
+    return `${KUBE_API_SERVER}/apis/argoproj.io/v1alpha1/namespaces/${namespace}/cronworkflows/${workflowName}`;
   },
 
   getPods: (namespace) => {
