@@ -103,7 +103,7 @@ jobs:
         run: |
           kubectl apply -f Cypress/cypress-rbac.yml
 
-      - name: Running tests with tag -> ${{ matrix.TestTag }} with ${{ nmatrix.AccessType }} type service
+      - name: Running tests with tag -> ${{ matrix.TestTag }} with ${{ matrix.AccessType }} type service
         uses: cypress-io/github-action@v2
         continue-on-error: false
         with:
