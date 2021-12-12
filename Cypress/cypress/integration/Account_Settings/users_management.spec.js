@@ -1,5 +1,5 @@
 /// <reference types='cypress-tags' />
-import * as user from "../../../fixtures/Users.json";
+import * as user from "../../fixtures/Users.json";
 
 describe(["users-management"], "Testing the User management section", () => {
   before("Clearing local storage", () => {

@@ -1,6 +1,6 @@
 /// <reference types='cypress-tags' />
-import { AdminName, AdminPassword } from "../../../fixtures/Users.json";
-import { user1, user2 } from "../../../fixtures/teaming.json";
+import { AdminName, AdminPassword } from "../../fixtures/Users.json";
+import { user1, user2 } from "../../fixtures/teaming.json";
 
 describe(["teaming"], "Testing the Teaming section", () => {
   before("Clearing local storage", () => {

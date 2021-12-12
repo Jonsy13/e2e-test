@@ -1,5 +1,5 @@
 /// <reference types='cypress-tags' />
-import * as user from "../../../fixtures/Users.json";
+import * as user from "../../fixtures/Users.json";
 
 describe("Testing the accessibility of Getting Started Page", () => {
   before("Clearing local storage", () => {

@@ -1,6 +1,6 @@
 // <reference types="Cypress" />
-import * as user from "../../../fixtures/Users.json";
-import * as workflows from "../../../fixtures/Workflows.json";
+import * as user from "../../fixtures/Users.json";
+import * as workflows from "../../fixtures/Workflows.json";
 
 export const workflowNamespace = Cypress.env("AGENT_NAMESPACE");
 export const agent = Cypress.env("AGENT");
