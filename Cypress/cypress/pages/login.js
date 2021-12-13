@@ -26,6 +26,7 @@ Cypress.Commands.add("requestLogin", (loginName, loginPassword) => {
   cy.visit("/");
   cy.wait(500);
   cy.location().then((loc) => {
-    loc.pathname === '/getStarted' ? cy.getStarted(loginPassword) : null;
-  })
+    loc.pathname === "/getStarted" ? cy.getStarted(loginPassword) : null;
+  });
+  cy.wait(500);
 });
