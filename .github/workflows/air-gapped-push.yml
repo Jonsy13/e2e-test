@@ -1,0 +1,45 @@
+---
+## This worflow will build the litmus-e2e image for every new commit.
+name: Air-gapped-kind-image-push
+on:
+  workflow_dispatch:
+
+jobs:
+  air-gapped-job:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      # Pulling kind/node image
+
+      - name: Setting Up Assets
+        run: |
+          mkdir assets
+          docker pull kindest/node:v1.21.1 && docker save kindest/node:v1.21.1 -o assets/node.tar
+          docker pull registry:2 && docker save registry:2 -o assets/registry.tar
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          version: latest
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        with:
+          platforms: all
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          file: ./build/Dockerfile
+          context: .
+          platforms: linux/amd64
+          tags: |
+            jonsy13/air-gapped-kind:ci
