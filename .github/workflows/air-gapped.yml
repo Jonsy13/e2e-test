@@ -21,4 +21,4 @@ jobs:
 
       # Creating a cluster with network none & mounting all assets inside the container as a host.
       - run: |
-          docker run -t --rm --network none -v "$(pwd)"/assets:/kind-air-gap/assets --privileged jonsy13/air-gapped-kind:ci /bin/bash -c "ls && cd assets && chmod +x kind.sh && ./kind.sh"
+          docker run -t --rm --network none -v "$(pwd)"/assets:/air-gapped-kind/assets --privileged jonsy13/air-gapped-kind:ci /bin/bash -c "ls && cd assets && ls && chmod +x kind.sh && ./kind.sh"
