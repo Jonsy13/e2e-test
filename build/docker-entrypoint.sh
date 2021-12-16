@@ -16,11 +16,6 @@ while ! docker info; do
   sleep 3
 done
 
-# Import pre-installed images
-for file in /images/*.tar; do
-  docker load <$file
-done
-
 # Bring docker service back to foreground
 fg %1
 
