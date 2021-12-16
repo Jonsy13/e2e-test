@@ -3,14 +3,13 @@ set -e
 
 source utils.sh
 
-docker load -i litmusportal-frontend.tar
-docker load -i litmusportal-server.tar
-docker load -i litmusportal-auth-server.tar
-
-set -o errexit
+# Import pre-installed images
+for file in ./*.tar; do
+  docker load <$file
+done
 
 # Litmus-Portal Works starts from here
-
+local_registry="localhost:5000"
 namespace="litmus"
 version="ci"
 

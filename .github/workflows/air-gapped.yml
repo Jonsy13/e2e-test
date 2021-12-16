@@ -13,6 +13,7 @@ jobs:
       - run: |
           mkdir assets
           cp ./litmus/utils.sh assets/
+          cp ./litmus/kind.sh assets/
           docker pull litmuschaos/litmusportal-frontend:ci && docker save litmuschaos/litmusportal-frontend:ci -o assets/litmusportal-frontend.tar
           docker pull litmuschaos/litmusportal-server:ci && docker save litmuschaos/litmusportal-server:ci -o assets/litmusportal-server.tar
           docker pull litmuschaos/litmusportal-auth-server:ci && docker save litmuschaos/litmusportal-auth-server:ci -o assets/litmusportal-auth-server.tar
