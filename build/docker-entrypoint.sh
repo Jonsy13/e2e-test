@@ -5,19 +5,19 @@ set -o errexit
 echo "Setting up KIND cluster"
 
 # Turn on bash's job control
-set -m
+# set -m
 
 # Start docker service in background
-/usr/local/bin/dockerd-entrypoint.sh &
+# /usr/local/bin/dockerd-entrypoint.sh &
 
-# Wait that the docker service is up
-while ! docker info; do
-  echo "Waiting docker..."
-  sleep 3
-done
+# # Wait that the docker service is up
+# while ! docker info; do
+#   echo "Waiting docker..."
+#   sleep 3
+# done
 
 # Bring docker service back to foreground
-fg %1
+# fg %1
 
 # Import pre-installed images
 for file in ./assets/*.tar; do
