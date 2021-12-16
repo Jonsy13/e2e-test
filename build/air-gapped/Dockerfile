@@ -1,5 +1,7 @@
 FROM alpine:3.15
 
+WORKDIR /air-gapped-kind
+
 RUN apk add --no-cache ca-certificates
 
 # set up nsswitch.conf for Go's "netgo" implementation (which Docker explicitly uses)
@@ -115,6 +117,8 @@ RUN apk update && \
 
 COPY ./assets/ ./assets/
 
-COPY build/air-gapped/entrypoint-wrapper.sh /entrypoint-wrapper.sh
+COPY build/air-gapped/entrypoint-wrapper.sh ./entrypoint-wrapper.sh
+
+RUN chmod +x ./entrypoint-wrapper.sh
 
 ENTRYPOINT ["./entrypoint-wrapper.sh"]
