@@ -25,6 +25,8 @@ sleep 30
 
 kubectl get pods -A
 
+kubectl get pods -n litmus
+
 echo -e "\n---------------Pods running in ${namespace} Namespace---------------\n"
 kubectl get pods -n ${namespace}
 
