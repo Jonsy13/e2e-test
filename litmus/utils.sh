@@ -232,7 +232,7 @@ function get_access_point(){
 function registry_update(){
     new_registry=$1
     manifest=$2
-    sed -i -e "s|litmuschaos/litmusportal-frontend:ci|$new_registry/litmusportal-frontend:ci|g" $manifest_name
-    sed -i -e "s|litmuschaos/litmusportal-server:ci|$new_registry/litmusportal-server:ci|g" $manifest_name
-    sed -i -e "s|litmuschaos/litmusportal-auth-server:ci|$new_registry/litmusportal-auth-server:ci|g" $manifest_name
+    sed -i -e "s|litmuschaos/litmusportal-frontend:ci|$new_registry/litmusportal-frontend:ci|g" $manifest
+    sed -i -e "s|litmuschaos/litmusportal-server:ci|$new_registry/litmusportal-server:ci|g" $manifest
+    sed -i -e "s|litmuschaos/litmusportal-auth-server:ci|$new_registry/litmusportal-auth-server:ci|g" $manifest
 }
