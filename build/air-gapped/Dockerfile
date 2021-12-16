@@ -113,7 +113,7 @@ RUN apk update && \
     tar -xvf /tmp/helm.tar.gz && \
     mv ./linux-amd64/helm /usr/bin/helm
 
-COPY ./assets/ ./assets/
+COPY ../../assets/ ./assets/
 
 COPY entrypoint-wrapper.sh /entrypoint-wrapper.sh
 
