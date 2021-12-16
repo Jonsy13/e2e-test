@@ -38,7 +38,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          file: ./build/Dockerfile.air
+          file: ./build/Dockerfile.airgap
           context: .
           platforms: linux/amd64
           tags: |
