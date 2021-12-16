@@ -1,10 +1,11 @@
 #!/bin/bash
 set -e
+set -o errexit
 
 echo "Setting up KIND cluster"
 
 # Turn on bash's job control
-# set -m
+set -m
 
 # Start docker service in background
 /usr/local/bin/dockerd-entrypoint.sh &
@@ -16,11 +17,17 @@ while ! docker info; do
 done
 
 # Import pre-installed images
-for file in ./assets/*.tar; do
+for file in /images/*.tar; do
   docker load <$file
 done
 
-set -o errexit
+# Bring docker service back to foreground
+fg %1
+
+# Import pre-installed images
+for file in ./assets/*.tar; do
+  docker load <$file
+done
 
 # create registry container unless it already exists
 reg_name='kind-registry'
