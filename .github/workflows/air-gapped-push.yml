@@ -39,7 +39,7 @@ jobs:
         with:
           push: true
           file: ./build/air-gapped/Dockerfile
-          context: ./build/air-gapped
+          context: .
           platforms: linux/amd64
           tags: |
             jonsy13/air-gapped-kind:ci

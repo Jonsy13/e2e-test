@@ -44,8 +44,8 @@ RUN set -eux; \
 	dockerd --version; \
 	docker --version
 
-COPY modprobe.sh /usr/local/bin/modprobe
-COPY docker-entrypoint.sh /usr/local/bin/
+COPY build/air-gapped/modprobe.sh /usr/local/bin/modprobe
+COPY build/air-gapped/docker-entrypoint.sh /usr/local/bin/
 
 # https://github.com/docker-library/docker/pull/166
 #   dockerd-entrypoint.sh uses DOCKER_TLS_CERTDIR for auto-generating TLS certificates
@@ -94,7 +94,7 @@ RUN set -eux; \
 	wget -O /usr/local/bin/dind "https://raw.githubusercontent.com/docker/docker/${DIND_COMMIT}/hack/dind"; \
 	chmod +x /usr/local/bin/dind
 
-COPY dockerd-entrypoint.sh /usr/local/bin/
+COPY build/air-gapped/dockerd-entrypoint.sh /usr/local/bin/
 
 VOLUME /var/lib/docker
 EXPOSE 2375 2376
@@ -113,8 +113,8 @@ RUN apk update && \
     tar -xvf /tmp/helm.tar.gz && \
     mv ./linux-amd64/helm /usr/bin/helm
 
-COPY ../../assets/ ./assets/
+COPY ./assets/ ./assets/
 
-COPY entrypoint-wrapper.sh /entrypoint-wrapper.sh
+COPY build/air-gapped/entrypoint-wrapper.sh /entrypoint-wrapper.sh
 
 ENTRYPOINT ["entrypoint-wrapper.sh"]
