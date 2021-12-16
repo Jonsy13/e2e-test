@@ -25,25 +25,25 @@ sleep 30
 
 kubectl get pods -A
 
-# echo -e "\n---------------Pods running in ${namespace} Namespace---------------\n"
-# kubectl get pods -n ${namespace}
+echo -e "\n---------------Pods running in ${namespace} Namespace---------------\n"
+kubectl get pods -n ${namespace}
 
-# echo -e "\n---------------Waiting for all pods to be ready---------------\n"
-# # Waiting for pods to be ready (timeout - 360s)
-# wait_for_pods ${namespace} 360
+echo -e "\n---------------Waiting for all pods to be ready---------------\n"
+# Waiting for pods to be ready (timeout - 360s)
+wait_for_pods ${namespace} 360
 
-# echo -e "\n------------- Verifying Namespace, Deployments, pods and Images for Litmus-Portal ------------------\n"
-# # Namespace verification
-# verify_namespace ${namespace}
+echo -e "\n------------- Verifying Namespace, Deployments, pods and Images for Litmus-Portal ------------------\n"
+# Namespace verification
+verify_namespace ${namespace}
 
-# # Deployments verification
-# verify_all_components litmusportal-frontend,litmusportal-server ${namespace}
+# Deployments verification
+verify_all_components litmusportal-frontend,litmusportal-server ${namespace}
 
-# # Pods verification
-# verify_pod litmusportal-frontend ${namespace}
-# verify_pod litmusportal-server ${namespace}
-# verify_pod mongo ${namespace}
+# Pods verification
+verify_pod litmusportal-frontend ${namespace}
+verify_pod litmusportal-server ${namespace}
+verify_pod mongo ${namespace}
 
-# # Images verification
-# verify_deployment_image $version litmusportal-frontend ${namespace}
-# verify_deployment_image $version litmusportal-server ${namespace}
+# Images verification
+verify_deployment_image $version litmusportal-frontend ${namespace}
+verify_deployment_image $version litmusportal-server ${namespace}
