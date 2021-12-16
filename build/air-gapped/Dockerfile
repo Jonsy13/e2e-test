@@ -117,4 +117,4 @@ COPY ./assets/ ./assets/
 
 COPY build/air-gapped/entrypoint-wrapper.sh /entrypoint-wrapper.sh
 
-ENTRYPOINT ["entrypoint-wrapper.sh"]
+ENTRYPOINT ["./entrypoint-wrapper.sh"]
