@@ -21,7 +21,7 @@ registry_update "${local_registry}" litmus-portal-setup.yml
 
 kubectl apply -f litmus-portal-setup.yml
 
-sleep 30
+sleep 5
 
 kubectl get pods -A
 
