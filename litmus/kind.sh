@@ -19,15 +19,21 @@ echo -e "\n---------------Tagging All Images for ChaosCenter for local registry-
 docker tag litmuschaos/litmusportal-frontend:ci ${local_registry}/litmusportal-frontend:ci
 docker tag litmuschaos/litmusportal-server:ci ${local_registry}/litmusportal-server:ci
 docker tag litmuschaos/litmusportal-auth-server:ci ${local_registry}/litmusportal-auth-server:ci
+docker tag litmuschaos/curl:latest ${local_registry}/litmusportal-curl:latest
+docker tag litmuschaos/mongo:4.2.8 ${local_registry}/mongo:4.2.8
 
 echo -e "\n---------------Pushing All Images for ChaosCenter to local registry------------------\n"
 
 docker push ${local_registry}/litmusportal-frontend:ci
 docker push ${local_registry}/litmusportal-server:ci
 docker push ${local_registry}/litmusportal-auth-server:ci
+docker push ${local_registry}/litmusportal-curl:latest
+docker push ${local_registry}/mongo:4.2.8
 
+echo -e "\n---------------Updating Registry in manifest-----------------------------------------\n"
 registry_update "${local_registry}" litmus-portal-setup.yml
 
+echo -e "\n---------------Applying Manifest-----------------------------------------------------\n"
 kubectl apply -f litmus-portal-setup.yml
 
 kubectl describe nodes 
