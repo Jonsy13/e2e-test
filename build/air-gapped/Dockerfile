@@ -117,7 +117,7 @@ RUN apk update && \
     mv ./linux-amd64/helm /usr/bin/helm
 
 COPY ./assets/ ./assets/
-
+COPY build/air-gapped/kind-config.yml ./kind-config.yml
 COPY build/air-gapped/entrypoint-wrapper.sh ./entrypoint-wrapper.sh
 
 RUN chmod +x ./entrypoint-wrapper.sh
