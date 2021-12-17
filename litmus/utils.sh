@@ -235,4 +235,6 @@ function registry_update(){
     sed -i -e "s|litmuschaos/litmusportal-frontend:ci|$new_registry/litmusportal-frontend:ci|g" $manifest
     sed -i -e "s|litmuschaos/litmusportal-server:ci|$new_registry/litmusportal-server:ci|g" $manifest
     sed -i -e "s|litmuschaos/litmusportal-auth-server:ci|$new_registry/litmusportal-auth-server:ci|g" $manifest
+    sed -i -e "s|litmuschaos/curl:latest|$new_registry/curl:latest|g" $manifest
+    sed -i -e "s|litmuschaos/mongo:4.2.8|$new_registry/mongo:4.2.8|g" $manifest
 }
