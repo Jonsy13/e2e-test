@@ -14,11 +14,14 @@ jobs:
           mkdir runtime-assets
           cp ./litmus/utils.sh runtime-assets/
           cp ./litmus/kind.sh runtime-assets/
-          docker pull litmuschaos/litmusportal-frontend:ci && docker save litmuschaos/litmusportal-frontend:ci -o runtime-assets/litmusportal-frontend.tar
-          docker pull litmuschaos/litmusportal-server:ci && docker save litmuschaos/litmusportal-server:ci -o runtime-assets/litmusportal-server.tar
-          docker pull litmuschaos/litmusportal-auth-server:ci && docker save litmuschaos/litmusportal-auth-server:ci -o runtime-assets/litmusportal-auth-server.tar
+          docker pull litmuschaos/curl:latest && docker save litmuschaos/curl:latest -o runtime-assets/curl.tar
+          docker pull litmuschaos/litmusportal-frontend:ci && docker save litmuschaos/litmusportal-frontend:ci -o runtime-assets/frontend.tar
+          docker pull litmuschaos/litmusportal-server:ci && docker save litmuschaos/litmusportal-server:ci -o runtime-assets/gql-server.tar
+          docker pull litmuschaos/litmusportal-auth-server:ci && docker save litmuschaos/litmusportal-auth-server:ci -o runtime-assets/auth-server.tar
+          docker pull litmuschaos/mongo:4.2.8 && docker save litmuschaos/mongo:4.2.8 -o runtime-assets/mongo.tar
           curl https://raw.githubusercontent.com/litmuschaos/litmus/master/litmus-portal/cluster-k8s-manifest.yml --output runtime-assets/litmus-portal-setup.yml
 
       # Creating a cluster with network none & mounting all assets inside the container as a host.
-      - run: |
+      - name: Creating an Air-gapped KIND Cluster & Running Tests
+        run: |
           docker run -t --rm --network none -v "$(pwd)"/runtime-assets:/air-gapped-kind/runtime-assets --privileged jonsy13/air-gapped-kind:ci /bin/bash -c "cd runtime-assets && ls && chmod +x ./kind.sh && ./kind.sh"

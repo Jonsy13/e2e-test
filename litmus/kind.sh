@@ -4,6 +4,7 @@ set -e
 source utils.sh
 
 # Import pre-installed images
+echo -e "\n---------------Loading All Images for ChaosCenter---------------\n"
 for file in ./*.tar; do
   docker load <$file
 done
@@ -13,9 +14,17 @@ local_registry="localhost:5000"
 namespace="litmus"
 version="ci"
 
+echo -e "\n---------------Tagging All Images for ChaosCenter for local registry---------------\n"
+
 docker tag litmuschaos/litmusportal-frontend:ci ${local_registry}/litmusportal-frontend:ci
 docker tag litmuschaos/litmusportal-server:ci ${local_registry}/litmusportal-server:ci
 docker tag litmuschaos/litmusportal-auth-server:ci ${local_registry}/litmusportal-auth-server:ci
+
+echo -e "\n---------------Pushing All Images for ChaosCenter to local registry------------------\n"
+
+docker push ${local_registry}/litmusportal-frontend:ci
+docker push ${local_registry}/litmusportal-server:ci
+docker push ${local_registry}/litmusportal-auth-server:ci
 
 registry_update "${local_registry}" litmus-portal-setup.yml
 
