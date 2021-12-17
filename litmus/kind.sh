@@ -31,12 +31,12 @@ kubectl get pods -n litmus
 
 kubectl describe pods -n litmus
 
-# echo -e "\n---------------Pods running in ${namespace} Namespace---------------\n"
-# kubectl get pods -n ${namespace}
+echo -e "\n---------------Pods running in ${namespace} Namespace---------------\n"
+kubectl get pods -n ${namespace}
 
-# echo -e "\n---------------Waiting for all pods to be ready---------------\n"
-# # Waiting for pods to be ready (timeout - 360s)
-# wait_for_pods ${namespace} 360
+echo -e "\n---------------Waiting for all pods to be ready---------------\n"
+# Waiting for pods to be ready (timeout - 360s)
+wait_for_pods ${namespace} 360
 
 # echo -e "\n------------- Verifying Namespace, Deployments, pods and Images for Litmus-Portal ------------------\n"
 # # Namespace verification

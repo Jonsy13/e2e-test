@@ -50,3 +50,5 @@ data:
 EOF
 
 local_registry="localhost:${reg_port}"
+
+exec "$@"
