@@ -29,7 +29,7 @@ if [ "${running}" != 'true' ]; then
 fi
 
 # create a cluster with the local registry enabled in containerd
-kind create cluster --image kindest/node:v1.21.1 --config=./kind-config.yml
+kind create cluster --image kindest/node:v1.21.1 --config=./kind-config.yml --wait=900s
 
 # connect the registry to the cluster network
 # (the network may already be connected)
