@@ -2,7 +2,7 @@ name: cypress-build
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   docker-build-cypress-tests:
