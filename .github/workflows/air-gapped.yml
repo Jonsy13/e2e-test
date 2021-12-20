@@ -20,7 +20,7 @@ jobs:
           docker pull -q litmuschaos/litmusportal-server:ci && docker save litmuschaos/litmusportal-server:ci -o runtime-assets/gql-server.tar
           docker pull -q litmuschaos/litmusportal-auth-server:ci && docker save litmuschaos/litmusportal-auth-server:ci -o runtime-assets/auth-server.tar
           docker pull -q litmuschaos/mongo:4.2.8 && docker save litmuschaos/mongo:4.2.8 -o runtime-assets/mongo.tar
-          docker pull -q cypress/included:3.2.0 && docker save cypress/included:3.2.0 -o runtime-assets/cypress.tar
+          docker pull -q cypress/included:7.3.0 && docker save cypress/included:7.3.0 -o runtime-assets/cypress.tar
           curl https://raw.githubusercontent.com/litmuschaos/litmus/master/litmus-portal/cluster-k8s-manifest.yml --output runtime-assets/litmus-portal-setup.yml
 
       # Creating a cluster with network none & mounting all assets inside the container as a host.
