@@ -13,7 +13,7 @@ jobs:
       - name: Installing plugins
         run: |
           cd Cypress && npm i
-          
+
       # Pulling kind/node image
       - name: Setting up Image Assets
         run: |
@@ -33,6 +33,5 @@ jobs:
         run: |
           docker run -t --rm --network none \
           -v "$(pwd)"/runtime-assets:/air-gapped-kind/runtime-assets \
-          -v "$(pwd)"/Cypress:/air-gapped-kind/Cypress \
           --privileged jonsy13/air-gapped-kind:ci /bin/bash \
           -c "cd runtime-assets && ls && chmod +x ./kind.sh && ./kind.sh"
