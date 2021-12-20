@@ -59,4 +59,4 @@ export NODE_IP=$(kubectl -n ${namespace} get nodes $NODE_NAME -o jsonpath='{.sta
 export NODE_PORT=$(kubectl -n ${namespace} get -o jsonpath="{.spec.ports[0].nodePort}" services litmusportal-frontend-service)
 export AccessURL="http://$NODE_IP:$NODE_PORT"
 
-cd .. && docker run -it -e CYPRESS_BASE_URL=${AccessURL} -e CYPRESS_INCLUDE_TAGS="login" --net kind jonsy13/e2e:ci --config-file cypress.prod.json
+docker run -t -e CYPRESS_BASE_URL=${AccessURL} -e CYPRESS_INCLUDE_TAGS="login" --net kind jonsy13/e2e:ci --config-file cypress.prod.json
