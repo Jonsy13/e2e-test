@@ -67,6 +67,17 @@ function wait_for_ingress(){
     done; 
 }
 
+
+function get_last_nth_release(){
+    release_no=${1}
+    tail=$(expr ${release_no} - 1)
+    curl --silent "https://api.github.com/repos/litmuschaos/litmus-go/releases" |
+    grep -m${release_no} '"tag_name":' |
+    tail -n${tail} |                                          
+    sed -E 's/.*"([^"]+)".*/\1/'
+}
+                        
+
 ## Function to list requested resources in given namespaces
 function show_resources(){
     resource_type=$1

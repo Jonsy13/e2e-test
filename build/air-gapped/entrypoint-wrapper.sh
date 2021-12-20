@@ -15,7 +15,7 @@ done
 
 # Import pre-installed images
 for file in ./assets/*.tar; do
-  docker load <$file
+  docker load -q <$file
 done
 
 # create registry container unless it already exists

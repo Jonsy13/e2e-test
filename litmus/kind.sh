@@ -53,18 +53,12 @@ echo -e "\n---------------Waiting for all pods to be ready---------------\n"
 # Waiting for pods to be ready (timeout - 360s)
 wait_for_pods ${namespace} 360
 
-# echo -e "\n------------- Verifying Namespace, Deployments, pods and Images for Litmus-Portal ------------------\n"
-# # Namespace verification
-# verify_namespace ${namespace}
+# Getting access point for ChaosCenter
+get_access_point "litmus" "NodePort"
 
-# # Deployments verification
-# verify_all_components litmusportal-frontend,litmusportal-server ${namespace}
+echo $AccessURL
 
-# # Pods verification
-# verify_pod litmusportal-frontend ${namespace}
-# verify_pod litmusportal-server ${namespace}
-# verify_pod mongo ${namespace}
-
-# # Images verification
-# verify_deployment_image $version litmusportal-frontend ${namespace}
-# verify_deployment_image $version litmusportal-server ${namespace}
+docker run -it -v ../Cypress:/e2e -w /e2e \
+  -e CYPRESS_BASE_URL=${AccessURL} CYPRESS_INCLUDE_TAGS="login" \
+  cypress/included:3.2.0 \
+  --config-file="cypress.prod.json"
