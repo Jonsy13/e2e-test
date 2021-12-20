@@ -36,4 +36,4 @@ jobs:
       #     --privileged jonsy13/air-gapped-kind:ci /bin/bash \
       #     -c "cd runtime-assets && ls && chmod +x ./kind.sh && ./kind.sh"
 
-      - run: docker run -t -e CYPRESS_BASE_URL="https://google.com" -e CYPRESS_INCLUDE_TAGS="login" --net kind jonsy13/e2e:ci
+      - run: docker run -t -e CYPRESS_BASE_URL="https://google.com" -e CYPRESS_INCLUDE_TAGS="login" jonsy13/e2e:ci
