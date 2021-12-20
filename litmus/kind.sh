@@ -63,5 +63,5 @@ export AccessURL="http://$NODE_IP:$NODE_PORT"
 
 docker run -it -v ../Cypress:/e2e -w /e2e \
   -e CYPRESS_BASE_URL=${AccessURL} CYPRESS_INCLUDE_TAGS="login" \
-  ${local_registry}/included:3.2.0 \
+  localhost:5000/included:3.2.0 \
   --config-file="cypress.prod.json"
