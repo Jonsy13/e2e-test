@@ -10,28 +10,30 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Installing plugins
-        run: |
-          cd Cypress && npm i
+      # - name: Installing plugins
+      #   run: |
+      #     cd Cypress && npm i
 
-      # Pulling kind/node image
-      - name: Setting up Image Assets
-        run: |
-          mkdir runtime-assets
-          cp ./litmus/utils.sh runtime-assets/
-          cp ./litmus/kind.sh runtime-assets/
-          docker pull -q litmuschaos/curl:latest && docker save litmuschaos/curl:latest -o runtime-assets/curl.tar
-          docker pull -q litmuschaos/litmusportal-frontend:ci && docker save litmuschaos/litmusportal-frontend:ci -o runtime-assets/frontend.tar
-          docker pull -q litmuschaos/litmusportal-server:ci && docker save litmuschaos/litmusportal-server:ci -o runtime-assets/gql-server.tar
-          docker pull -q litmuschaos/litmusportal-auth-server:ci && docker save litmuschaos/litmusportal-auth-server:ci -o runtime-assets/auth-server.tar
-          docker pull -q litmuschaos/mongo:4.2.8 && docker save litmuschaos/mongo:4.2.8 -o runtime-assets/mongo.tar
-          docker pull -q jonsy13/e2e:ci && docker save jonsy13/e2e:ci -o runtime-assets/e2e.tar
-          curl https://raw.githubusercontent.com/litmuschaos/litmus/master/litmus-portal/cluster-k8s-manifest.yml --output runtime-assets/litmus-portal-setup.yml
+      # # Pulling kind/node image
+      # - name: Setting up Image Assets
+      #   run: |
+      #     mkdir runtime-assets
+      #     cp ./litmus/utils.sh runtime-assets/
+      #     cp ./litmus/kind.sh runtime-assets/
+      #     docker pull -q litmuschaos/curl:latest && docker save litmuschaos/curl:latest -o runtime-assets/curl.tar
+      #     docker pull -q litmuschaos/litmusportal-frontend:ci && docker save litmuschaos/litmusportal-frontend:ci -o runtime-assets/frontend.tar
+      #     docker pull -q litmuschaos/litmusportal-server:ci && docker save litmuschaos/litmusportal-server:ci -o runtime-assets/gql-server.tar
+      #     docker pull -q litmuschaos/litmusportal-auth-server:ci && docker save litmuschaos/litmusportal-auth-server:ci -o runtime-assets/auth-server.tar
+      #     docker pull -q litmuschaos/mongo:4.2.8 && docker save litmuschaos/mongo:4.2.8 -o runtime-assets/mongo.tar
+      #     docker pull -q jonsy13/e2e:ci && docker save jonsy13/e2e:ci -o runtime-assets/e2e.tar
+      #     curl https://raw.githubusercontent.com/litmuschaos/litmus/master/litmus-portal/cluster-k8s-manifest.yml --output runtime-assets/litmus-portal-setup.yml
 
-      # Creating a cluster with network none & mounting all assets inside the container as a host.
-      - name: Creating an Air-gapped KIND Cluster & Running Tests
-        run: |
-          docker run -t --rm --network none \
-          -v "$(pwd)"/runtime-assets:/air-gapped-kind/runtime-assets \
-          --privileged jonsy13/air-gapped-kind:ci /bin/bash \
-          -c "cd runtime-assets && ls && chmod +x ./kind.sh && ./kind.sh"
+      # # Creating a cluster with network none & mounting all assets inside the container as a host.
+      # - name: Creating an Air-gapped KIND Cluster & Running Tests
+      #   run: |
+      #     docker run -t --rm --network none \
+      #     -v "$(pwd)"/runtime-assets:/air-gapped-kind/runtime-assets \
+      #     --privileged jonsy13/air-gapped-kind:ci /bin/bash \
+      #     -c "cd runtime-assets && ls && chmod +x ./kind.sh && ./kind.sh"
+
+      - run: docker run -it -e CYPRESS_BASE_URL="https://google.com" -e CYPRESS_INCLUDE_TAGS="login" --net kind jonsy13/e2e:ci
