@@ -9,6 +9,11 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+
+      - name: Installing plugins
+        run: |
+          cd Cypress && npm i
+          
       # Pulling kind/node image
       - name: Setting up Image Assets
         run: |
