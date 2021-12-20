@@ -21,7 +21,6 @@ docker tag litmuschaos/litmusportal-server:ci ${local_registry}/litmusportal-ser
 docker tag litmuschaos/litmusportal-auth-server:ci ${local_registry}/litmusportal-auth-server:ci
 docker tag litmuschaos/curl:latest ${local_registry}/curl:latest
 docker tag litmuschaos/mongo:4.2.8 ${local_registry}/mongo:4.2.8
-docker tag cypress/included:3.2.0 ${local_registry}/included:3.2.0
 
 echo -e "\n---------------Pushing All Images for ChaosCenter to local registry------------------\n"
 
@@ -30,7 +29,6 @@ docker push -q ${local_registry}/litmusportal-server:ci
 docker push -q ${local_registry}/litmusportal-auth-server:ci
 docker push -q ${local_registry}/curl:latest
 docker push -q ${local_registry}/mongo:4.2.8
-docker push -q ${local_registry}/included:3.2.0
 
 echo -e "\n---------------Updating Registry in manifest-----------------------------------------\n"
 registry_update "${local_registry}" litmus-portal-setup.yml
@@ -63,5 +61,5 @@ export AccessURL="http://$NODE_IP:$NODE_PORT"
 
 docker run -it -v ../Cypress:/e2e -w /e2e \
   -e CYPRESS_BASE_URL=${AccessURL} CYPRESS_INCLUDE_TAGS="login" \
-  localhost:5000/included:3.2.0 \
+  cypress/included:3.2.0 \
   --config-file="cypress.prod.json"
