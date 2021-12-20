@@ -56,8 +56,6 @@ echo -e "\n---------------Waiting for all pods to be ready---------------\n"
 wait_for_pods ${namespace} 360
 
 # Getting access point for ChaosCenter
-get_access_point "litmus" "NodePort"
-
 export NODE_NAME=$(kubectl -n ${namespace} get pod  -l "component=litmusportal-frontend" -o=jsonpath='{.items[*].spec.nodeName}')
 export NODE_IP=$(kubectl -n ${namespace} get nodes $NODE_NAME -o jsonpath='{.status.addresses[?(@.type=="InternalIP")].address}')
 export NODE_PORT=$(kubectl -n ${namespace} get -o jsonpath="{.spec.ports[0].nodePort}" services litmusportal-frontend-service)
