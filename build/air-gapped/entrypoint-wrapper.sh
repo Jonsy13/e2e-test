@@ -18,8 +18,6 @@ for file in ./assets/*.tar; do
   docker load -q <$file
 done
 
-docker network create kind --internal
-
 # create registry container unless it already exists
 reg_name='kind-registry'
 reg_port='5000'
