@@ -60,3 +60,5 @@ export NODE_PORT=$(kubectl -n ${namespace} get -o jsonpath="{.spec.ports[0].node
 export AccessURL="http://$NODE_NAME:$NODE_PORT"
 
 docker run -t -e CYPRESS_BASE_URL=${AccessURL} -e CYPRESS_INCLUDE_TAGS="login" --net kind jonsy13/e2e:ci --config-file cypress.prod.json
+
+docker network inspect kind
