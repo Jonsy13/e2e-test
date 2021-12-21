@@ -47,7 +47,9 @@ RUN set -eux; \
   docker --version
 
 COPY build/air-gapped/modprobe.sh /usr/local/bin/modprobe
+RUN chmod +x /usr/local/bin/modprobe
 COPY build/air-gapped/docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # https://github.com/docker-library/docker/pull/166
 #   dockerd-entrypoint.sh uses DOCKER_TLS_CERTDIR for auto-generating TLS certificates
@@ -97,6 +99,7 @@ RUN set -eux; \
   chmod +x /usr/local/bin/dind
 
 COPY build/air-gapped/dockerd-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/dockerd-entrypoint.sh
 
 VOLUME /var/lib/docker
 EXPOSE 2375 2376
