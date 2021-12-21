@@ -64,4 +64,5 @@ export AccessURL="http://$NODE_NAME:$NODE_PORT"
 docker network inspect kind
 
 docker run --net kind litmuschaos/curl:latest $AccessURL
-# docker run -t -e CYPRESS_BASE_URL=${AccessURL} -e CYPRESS_INCLUDE_TAGS="login" --net kind jonsy13/e2e:ci --config-file cypress.prod.json
+
+docker run -t -e CYPRESS_BASE_URL=${AccessURL} -e CYPRESS_INCLUDE_TAGS="login" --net kind jonsy13/e2e:ci --config-file cypress.prod.json
