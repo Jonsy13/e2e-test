@@ -31,7 +31,7 @@ jobs:
       # Creating a cluster with network none & mounting all assets inside the container as a host.
       - name: Creating an Air-gapped KIND Cluster & Running Tests
         run: |
-          docker run -t --rm --network no-internet\
+          docker run -t --rm --network no-internet \
           -v "$(pwd)"/runtime-assets:/air-gapped-kind/runtime-assets \
           --privileged jonsy13/air-gapped-kind:ci /bin/bash \
           -c "cd runtime-assets && ls && chmod +x ./kind.sh && ./kind.sh"
