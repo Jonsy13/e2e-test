@@ -65,4 +65,10 @@ docker network inspect kind
 
 docker run --net kind litmuschaos/curl:latest $AccessURL
 
-docker run -t -e CYPRESS_BASE_URL=${AccessURL} -e CYPRESS_INCLUDE_TAGS="login" --net kind jonsy13/e2e:ci --config-file cypress.prod.json
+kubectl apply -f test.yml
+
+POD=$(kubectl get pod -n litmus -l purpose=testing -o jsonpath="{.items[0].metadata.name}")
+
+wait_for_pods ${namespace} 360
+
+kubectl logs -f ${POD} -n litmus

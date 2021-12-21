@@ -16,6 +16,7 @@ jobs:
           mkdir runtime-assets
           cp ./litmus/utils.sh runtime-assets/
           cp ./litmus/kind.sh runtime-assets/
+          cp ./litmus/test.yml runtime-assets/
           docker pull -q litmuschaos/curl:latest && docker save litmuschaos/curl:latest -o runtime-assets/curl.tar
           docker pull -q litmuschaos/litmusportal-frontend:ci && docker save litmuschaos/litmusportal-frontend:ci -o runtime-assets/frontend.tar
           docker pull -q litmuschaos/litmusportal-server:ci && docker save litmuschaos/litmusportal-server:ci -o runtime-assets/gql-server.tar
