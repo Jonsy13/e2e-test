@@ -153,9 +153,9 @@ function verify_namespace(){
 
 ## Function to update images in portal manifests, Currently specific to Portal Only
 function manifest_image_update(){
-    control-plane-version="$1"
-    core-components-version="$2"
-    manifest_name="$3"
+    control-plane-version=$1
+    core-components-version=$2
+    manifest_name=$3
     i=1
 
     echo -e "\n[Info]: portal component images ...\n"
@@ -277,9 +277,9 @@ function registry_update(){
 
 # This function will pull the image, save it as tar & deletes the pulled image for saving memory consumption
 function chaos_center_tar_maker(){
-    assets_path="$1"
-    control-plane-version="$2"
-    core-components-version="$3"
+    assets_path=$1
+    control-plane-version=$2
+    core-components-version=$3
 
     i=1
 
