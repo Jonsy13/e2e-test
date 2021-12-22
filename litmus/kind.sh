@@ -66,14 +66,18 @@ export AccessURL="http://$NODE_NAME:$NODE_PORT"
 
 docker network inspect kind
 
-docker run --net kind litmuschaos/curl:latest $AccessURL
+POD=$(kubectl get pod -n litmus -l "component=litmusportal-server" -o jsonpath="{.items[0].metadata.name}")
 
-kubectl apply -f test.yml
+kubectl logs ${POD} -n litmus -c auth-server
 
-POD=$(kubectl get pod -n litmus -l purpose=testing -o jsonpath="{.items[0].metadata.name}")
+# docker run --net kind litmuschaos/curl:latest $AccessURL
 
-wait_for_pods ${namespace} 360
+# kubectl apply -f test.yml
 
-kubectl logs -f ${POD} -n litmus
+# POD=$(kubectl get pod -n litmus -l purpose=testing -o jsonpath="{.items[0].metadata.name}")
 
-docker network inspect kind
+# wait_for_pods ${namespace} 360
+
+# kubectl logs -f ${POD} -n litmus
+
+# docker network inspect kind
