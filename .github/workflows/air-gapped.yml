@@ -13,6 +13,7 @@ jobs:
       # Pulling kind/node image
       - name: Setting up Image Assets
         run: |
+          whoami
           mkdir runtime-assets
           cp ./litmus/utils.sh runtime-assets/
           cp ./litmus/kind.sh runtime-assets/
