@@ -1,5 +1,12 @@
 #!/bin/bash
 
+declare -ga portal_images=("litmusportal-frontend" "litmusportal-server" "litmusportal-event-tracker"
+                       "litmusportal-auth-server" "litmusportal-subscriber")
+
+declare -ga backend_images=("chaos-operator" "chaos-runner" "chaos-exporter" "go-runner")
+
+declare -ga workflow_images=("curl:latest" "k8s:latest" "litmus-checker:latest" "workflow-controller:v3.2.3" "argoexec:v3.2.3" "mongo:4.2.8")
+
 ## Function to wait for a Given Endpoint to be active
 function wait_for_url(){
     wait_period=0
@@ -146,14 +153,24 @@ function verify_namespace(){
 
 ## Function to update images in portal manifests, Currently specific to Portal Only
 function manifest_image_update(){
-    version="$1"
-    manifest_name="$2"
-    echo "$2"
-    sed -i -e "s|litmuschaos/litmusportal-frontend:ci|litmuschaos/litmusportal-frontend:$version|g" $manifest_name
-    sed -i -e "s|litmuschaos/litmusportal-server:ci|litmuschaos/litmusportal-server:$version|g" $manifest_name
-    sed -i -e "s|litmuschaos/litmusportal-auth-server:ci|litmuschaos/litmusportal-auth-server:$version|g" $manifest_name
-    sed -i -e "s|litmuschaos/litmusportal-subscriber:ci|litmuschaos/litmusportal-subscriber:$version|g" $manifest_name
-    sed -i -e "s|litmuschaos/litmusportal-event-tracker:ci|litmuschaos/litmusportal-event-tracker:$version|g" $manifest_name
+    control-plane-version="$1"
+    core-components-version="$2"
+    manifest_name="$3"
+    i=1
+
+    echo -e "\n[Info]: portal component images ...\n"
+    for val in ${portal_images[@]}; do
+        echo "${i}. litmuschaos/${val}:${control-plane-version}"
+        sed -i -e "s|litmuschaos/${val}:.*|litmuschaos/${val}:${control-plane-version}|g" $manifest_name
+        i=$((i+1))
+    done
+
+    echo -e "\n[Info]: backend component images ...\n"
+    for val in ${backend_images[@]}; do
+        echo "${i}. litmuschaos/${val}:${core-components-version}"
+        sed -i -e "s|litmuschaos/${val}:.*|litmuschaos/${val}:${core-components-version}|g" $manifest_name
+        i=$((i+1))
+    done
 }
 
 ## Function to verify image for a deployment in given namespace
@@ -243,9 +260,51 @@ function get_access_point(){
 function registry_update(){
     new_registry=$1
     manifest=$2
-    sed -i -e "s|litmuschaos/litmusportal-frontend:ci|$new_registry/litmusportal-frontend:ci|g" $manifest
-    sed -i -e "s|litmuschaos/litmusportal-server:ci|$new_registry/litmusportal-server:ci|g" $manifest
-    sed -i -e "s|litmuschaos/litmusportal-auth-server:ci|$new_registry/litmusportal-auth-server:ci|g" $manifest
-    sed -i -e "s|litmuschaos/curl:latest|$new_registry/curl:latest|g" $manifest
+    sed -i -e "s|litmuschaos/litmusportal-frontend|$new_registry/litmusportal-frontend|g" $manifest
+    sed -i -e "s|litmuschaos/litmusportal-server|$new_registry/litmusportal-server|g" $manifest
+    sed -i -e "s|litmuschaos/litmusportal-auth-server|$new_registry/litmusportal-auth-server|g" $manifest
+    sed -i -e "s|litmuschaos/curl|$new_registry/curl|g" $manifest
+    sed -i -e "s|litmuschaos/mongo|$new_registry/mongo|g" $manifest
     sed -i -e "s|litmuschaos/mongo:4.2.8|$new_registry/mongo:4.2.8|g" $manifest
+    sed -i -e "s|litmuschaos/mongo:4.2.8|$new_registry/mongo:4.2.8|g" $manifest
+    sed -i -e "s|litmuschaos/mongo:4.2.8|$new_registry/mongo:4.2.8|g" $manifest
+    sed -i -e "s|litmuschaos/mongo:4.2.8|$new_registry/mongo:4.2.8|g" $manifest
+    sed -i -e "s|litmuschaos/mongo:4.2.8|$new_registry/mongo:4.2.8|g" $manifest
+    sed -i -e "s|litmuschaos/mongo:4.2.8|$new_registry/mongo:4.2.8|g" $manifest
+    sed -i -e "s|litmuschaos/mongo:4.2.8|$new_registry/mongo:4.2.8|g" $manifest
+    
+}
+
+# This function will pull the image, save it as tar & deletes the pulled image for saving memory consumption
+function chaos_center_tar_maker(){
+    assets_path="$1"
+    control-plane-version="$2"
+    core-components-version="$3"
+
+    i=1
+
+    echo -e "\n[Info]: pulling portal component images ...\n"
+    for val in ${portal_images[@]}; do
+        echo "\n[Info]: ${i}. litmuschaos/${val}:${control-plane-version}"
+        image_name="litmuschaos/${val}:${control-plane-version}"
+        docker pull -q ${image_name} && docker save ${image_name} -o ${assets_path}/${i}.tar && docker image rm ${image_name}
+        i=$((i+1))
+    done
+
+    echo -e "\n[Info]: pulling backend component images ...\n"
+    for val in ${backend_images[@]}; do
+        echo "\n[Info]: ${i}. litmuschaos/${val}:${core-components-version}"
+        image_name="litmuschaos/${val}:${core-components-version}"
+        docker pull -q ${image_name} && docker save ${image_name} -o ${assets_path}/${i}.tar && docker image rm ${image_name}
+        i=$((i+1))
+    done
+
+    echo -e "\n[Info]: pulling other images ...\n"
+    for val in ${workflow_images[@]}; do
+        echo "\n[Info]: ${i}. litmuschaos/${val}"
+        image_name="litmuschaos/${val}"
+        docker pull -q ${image_name} && docker save ${image_name} -o ${assets_path}/${i}.tar && docker image rm ${image_name}
+        i=$((i+1))
+    done
+    
 }

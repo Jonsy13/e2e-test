@@ -3,33 +3,69 @@
 name: Air-gapped Support
 on:
   workflow_dispatch:
+    inputs:
+      control-plane-version:
+        default: "ci"
+
+      core-components-version:
+        default: "ci"
 
 jobs:
-  air-gapped-job:
+  images-setup:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
-      # Pulling kind/node image
       - name: Setting up Image Assets
         run: |
-          whoami
           mkdir runtime-assets
           cp ./litmus/utils.sh runtime-assets/
           cp ./litmus/kind.sh runtime-assets/
-          cp ./litmus/test.yml runtime-assets/
-          docker pull -q litmuschaos/curl:latest && docker save litmuschaos/curl:latest -o runtime-assets/curl.tar
-          docker pull -q litmuschaos/litmusportal-frontend:ci && docker save litmuschaos/litmusportal-frontend:ci -o runtime-assets/frontend.tar
-          docker pull -q litmuschaos/litmusportal-server:ci && docker save litmuschaos/litmusportal-server:ci -o runtime-assets/gql-server.tar
-          docker pull -q litmuschaos/litmusportal-auth-server:ci && docker save litmuschaos/litmusportal-auth-server:ci -o runtime-assets/auth-server.tar
-          docker pull -q litmuschaos/mongo:4.2.8 && docker save litmuschaos/mongo:4.2.8 -o runtime-assets/mongo.tar
-          docker pull -q jonsy13/e2e:ci && docker save jonsy13/e2e:ci -o runtime-assets/e2e.tar
+          source ./litmus/utils.sh
+
+          chaos_center_tar_maker runtime-assets "2.4.0" "2.3.0"
+
+          tar_maker jonsy13/e2e:ci runtime-assets/e2e.tar
           curl https://raw.githubusercontent.com/litmuschaos/litmus/master/litmus-portal/cluster-k8s-manifest.yml --output runtime-assets/litmus-portal-setup.yml
+
+      - name: Archive Assets
+        uses: actions/upload-artifact@v2
+        with:
+          name: runtime-assets
+          path: runtime-assets
+
+  air-gapped-testing-job:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        TestTag:
+          - login
+          - getstarted
+          - account-settings
+          - teaming
+          - users-management
+          - custom-workflow-scheduling
+          - template-workflow-scheduling
+          - predefined-workflow-scheduling
+          - recurring-workflow-scheduling
+          - upload-workflow-scheduling
+          - gitops-workflow-scheduling
+          - workflow-scheduling-crud-ops
+          - data-source
+          - myhub
+          - routing
+          - workflow-stats
+
+    steps:
+      - name: Download runtime-assets
+        uses: actions/download-artifact@v2
+        with:
+          name: runtime-assets
 
       # Creating a cluster with network none & mounting all assets inside the container as a host.
       - name: Creating an Air-gapped KIND Cluster & Running Tests
         run: |
-          cat /etc/resolv.conf
           docker run -t --rm --network none \
           -v "$(pwd)"/runtime-assets:/air-gapped-kind/runtime-assets \
           --privileged jonsy13/air-gapped-kind:ci /bin/bash \
