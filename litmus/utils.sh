@@ -153,22 +153,22 @@ function verify_namespace(){
 
 ## Function to update images in portal manifests, Currently specific to Portal Only
 function manifest_image_update(){
-    control-plane-version=$1
-    core-components-version=$2
+    control_plane_version=$1
+    core_components_version=$2
     manifest_name=$3
     i=1
 
     echo -e "\n[Info]: portal component images ...\n"
     for val in ${portal_images[@]}; do
-        echo "${i}. litmuschaos/${val}:${control-plane-version}"
-        sed -i -e "s|litmuschaos/${val}:.*|litmuschaos/${val}:${control-plane-version}|g" $manifest_name
+        echo "${i}. litmuschaos/${val}:${control_plane_version}"
+        sed -i -e "s|litmuschaos/${val}:.*|litmuschaos/${val}:${control_plane_version}|g" $manifest_name
         i=$((i+1))
     done
 
     echo -e "\n[Info]: backend component images ...\n"
     for val in ${backend_images[@]}; do
-        echo "${i}. litmuschaos/${val}:${core-components-version}"
-        sed -i -e "s|litmuschaos/${val}:.*|litmuschaos/${val}:${core-components-version}|g" $manifest_name
+        echo "${i}. litmuschaos/${val}:${core_components_version}"
+        sed -i -e "s|litmuschaos/${val}:.*|litmuschaos/${val}:${core_components_version}|g" $manifest_name
         i=$((i+1))
     done
 }
@@ -278,23 +278,23 @@ function registry_update(){
 # This function will pull the image, save it as tar & deletes the pulled image for saving memory consumption
 function chaos_center_tar_maker(){
     assets_path=$1
-    control-plane-version=$2
-    core-components-version=$3
+    control_plane_version=$2
+    core_components_version=$3
 
     i=1
 
     echo -e "\n[Info]: pulling portal component images ...\n"
     for val in ${portal_images[@]}; do
-        echo "\n[Info]: ${i}. litmuschaos/${val}:${control-plane-version}"
-        image_name="litmuschaos/${val}:${control-plane-version}"
+        echo "\n[Info]: ${i}. litmuschaos/${val}:${control_plane_version}"
+        image_name="litmuschaos/${val}:${control_plane_version}"
         docker pull -q ${image_name} && docker save ${image_name} -o ${assets_path}/${i}.tar && docker image rm ${image_name}
         i=$((i+1))
     done
 
     echo -e "\n[Info]: pulling backend component images ...\n"
     for val in ${backend_images[@]}; do
-        echo "\n[Info]: ${i}. litmuschaos/${val}:${core-components-version}"
-        image_name="litmuschaos/${val}:${core-components-version}"
+        echo "\n[Info]: ${i}. litmuschaos/${val}:${core_components_version}"
+        image_name="litmuschaos/${val}:${core_components_version}"
         docker pull -q ${image_name} && docker save ${image_name} -o ${assets_path}/${i}.tar && docker image rm ${image_name}
         i=$((i+1))
     done
