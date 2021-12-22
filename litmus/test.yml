@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
     - name: test-container
-      image: localhost:5000/jonsy13/e2e:ci
+      image: localhost:5000/e2e:ci
       env:
         - name: CYPRESS_BASE_URL
           value: "http://litmusportal-frontend-service:9091"

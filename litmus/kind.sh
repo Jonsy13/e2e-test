@@ -23,6 +23,8 @@ docker tag litmuschaos/litmusportal-server:ci ${local_registry}/litmusportal-ser
 docker tag litmuschaos/litmusportal-auth-server:ci ${local_registry}/litmusportal-auth-server:ci
 docker tag litmuschaos/curl:latest ${local_registry}/curl:latest
 docker tag litmuschaos/mongo:4.2.8 ${local_registry}/mongo:4.2.8
+docker tag jonsy13/e2e:ci ${local_registry}/e2e:ci
+
 
 echo -e "\n---------------Pushing All Images for ChaosCenter to local registry------------------\n"
 
@@ -31,6 +33,7 @@ docker push -q ${local_registry}/litmusportal-server:ci
 docker push -q ${local_registry}/litmusportal-auth-server:ci
 docker push -q ${local_registry}/curl:latest
 docker push -q ${local_registry}/mongo:4.2.8
+docker push -q ${local_registry}/e2e:ci
 
 echo -e "\n---------------Updating Registry in manifest-----------------------------------------\n"
 registry_update "${local_registry}" litmus-portal-setup.yml
