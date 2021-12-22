@@ -36,6 +36,7 @@ jobs:
 
   air-gapped-testing-job:
     runs-on: ubuntu-latest
+    needs: images-setup
     strategy:
       fail-fast: false
       matrix:
