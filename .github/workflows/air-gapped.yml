@@ -26,10 +26,12 @@ jobs:
           docker pull -q jonsy13/e2e:ci && docker save jonsy13/e2e:ci -o runtime-assets/e2e.tar
           curl https://raw.githubusercontent.com/litmuschaos/litmus/master/litmus-portal/cluster-k8s-manifest.yml --output runtime-assets/litmus-portal-setup.yml
 
+      - run: docker network create --internal --subnet 10.1.1.0/24 no-internet
+
       # Creating a cluster with network none & mounting all assets inside the container as a host.
       - name: Creating an Air-gapped KIND Cluster & Running Tests
         run: |
-          docker run -t -i --network none \
+          docker run -t -i --network no-internet \
           -v "$(pwd)"/runtime-assets:/air-gapped-kind/runtime-assets \
           --privileged jonsy13/air-gapped-kind:ci /bin/bash \
           -c "cd runtime-assets && ls && chmod +x ./kind.sh && ./kind.sh"
