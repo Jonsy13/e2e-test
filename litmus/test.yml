@@ -11,6 +11,6 @@ spec:
       image: localhost:5000/e2e:ci
       env:
         - name: CYPRESS_BASE_URL
-          value: "http://litmusportal-frontend-service:9091"
+          value: #{FRONTEND_URL}
         - name: CYPRESS_INCLUDE_TAGS
           value: "login"

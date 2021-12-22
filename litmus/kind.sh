@@ -5,6 +5,8 @@ source utils.sh
 
 docker network inspect kind
 
+cat /etc/resolv.conf
+
 # Import pre-installed images
 echo -e "\n---------------Loading All Images for ChaosCenter---------------\n"
 for file in ./*.tar; do
@@ -62,22 +64,26 @@ wait_for_pods ${namespace} 360
 export NODE_NAME=$(kubectl -n ${namespace} get pod  -l "component=litmusportal-frontend" -o=jsonpath='{.items[*].spec.nodeName}')
 export NODE_IP=$(kubectl -n ${namespace} get nodes $NODE_NAME -o jsonpath='{.status.addresses[?(@.type=="InternalIP")].address}')
 export NODE_PORT=$(kubectl -n ${namespace} get -o jsonpath="{.spec.ports[0].nodePort}" services litmusportal-frontend-service)
-export AccessURL="http://$NODE_NAME:$NODE_PORT"
+export AccessURL="http://$NODE_IP:$NODE_PORT"
 
 docker network inspect kind
 
-POD=$(kubectl get pod -n litmus -l "component=litmusportal-server" -o jsonpath="{.items[0].metadata.name}")
+# Checking curl
+docker run --net kind litmuschaos/curl:latest $AccessURL
 
-kubectl logs ${POD} -n litmus -c auth-server
+# Checking Tests
+SVC_IP=$(kubectl get services litmusportal-frontend-service -n litmus -o jsonpath="{.spec.clusterIP}")
 
-# docker run --net kind litmuschaos/curl:latest $AccessURL
+AccessPoint="http://$SVC_IP:9091"
 
-# kubectl apply -f test.yml
+sed -i -e "s|#{FRONTEND_URL}|$AccessPoint|g" test.yml
 
-# POD=$(kubectl get pod -n litmus -l purpose=testing -o jsonpath="{.items[0].metadata.name}")
+kubectl apply -f test.yml
 
-# wait_for_pods ${namespace} 360
+POD=$(kubectl get pod -n litmus -l purpose=testing -o jsonpath="{.items[0].metadata.name}")
 
-# kubectl logs -f ${POD} -n litmus
+wait_for_pods ${namespace} 360
+
+kubectl logs -f ${POD} -n litmus
 
 # docker network inspect kind
