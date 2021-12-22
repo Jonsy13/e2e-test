@@ -75,3 +75,5 @@ POD=$(kubectl get pod -n litmus -l purpose=testing -o jsonpath="{.items[0].metad
 wait_for_pods ${namespace} 360
 
 kubectl logs -f ${POD} -n litmus
+
+docker network inspect kind
