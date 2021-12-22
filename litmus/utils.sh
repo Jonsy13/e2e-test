@@ -285,26 +285,32 @@ function chaos_center_tar_maker(){
 
     echo -e "\n[Info]: pulling portal component images ...\n"
     for val in ${portal_images[@]}; do
-        echo "\n[Info]: ${i}. litmuschaos/${val}:${control_plane_version}"
+        echo -e "\n[Info]: ${i}. litmuschaos/${val}:${control_plane_version}"
         image_name="litmuschaos/${val}:${control_plane_version}"
-        docker pull -q ${image_name} && docker save ${image_name} -o ${assets_path}/${i}.tar && docker image rm ${image_name}
+        tar_maker $image_name "$assets_path/${i}.tar"
         i=$((i+1))
     done
 
     echo -e "\n[Info]: pulling backend component images ...\n"
     for val in ${backend_images[@]}; do
-        echo "\n[Info]: ${i}. litmuschaos/${val}:${core_components_version}"
+        echo -e "\n[Info]: ${i}. litmuschaos/${val}:${core_components_version}"
         image_name="litmuschaos/${val}:${core_components_version}"
-        docker pull -q ${image_name} && docker save ${image_name} -o ${assets_path}/${i}.tar && docker image rm ${image_name}
+        tar_maker $image_name "$assets_path/${i}.tar"
         i=$((i+1))
     done
 
     echo -e "\n[Info]: pulling other images ...\n"
     for val in ${workflow_images[@]}; do
-        echo "\n[Info]: ${i}. litmuschaos/${val}"
+        echo -e "\n[Info]: ${i}. litmuschaos/${val}"
         image_name="litmuschaos/${val}"
-        docker pull -q ${image_name} && docker save ${image_name} -o ${assets_path}/${i}.tar && docker image rm ${image_name}
+        tar_maker $image_name "$assets_path/${i}.tar"
         i=$((i+1))
     done
     
+}
+
+tar_maker(){
+    image_name=$1
+    assets_path=${2}
+    docker pull -q ${image_name} && docker save ${image_name} -o ${assets_path} && docker image rm ${image_name}
 }
