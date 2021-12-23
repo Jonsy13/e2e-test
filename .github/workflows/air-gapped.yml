@@ -70,7 +70,7 @@ jobs:
           cp ./litmus/kind.sh runtime-assets/
           curl https://raw.githubusercontent.com/litmuschaos/litmus/master/litmus-portal/cluster-k8s-manifest.yml --output runtime-assets/litmus-portal-setup.yml
           manifest_image_update "2.4.0" "2.3.0" runtime-assets/litmus-portal-setup.yml 
-          registry_update "${local_registry}" runtime-assets/litmus-portal-setup.yml
+          registry_update "localhost:5000" runtime-assets/litmus-portal-setup.yml
 
       # Creating a cluster with network none & mounting all assets inside the container as a host.
       - name: Creating an Air-gapped KIND Cluster & Running Tests
