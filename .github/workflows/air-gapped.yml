@@ -18,21 +18,16 @@ jobs:
 
       - name: Setting up Image Assets
         run: |
-          mkdir runtime-assets
-          cp ./litmus/utils.sh runtime-assets/
-          cp ./litmus/kind.sh runtime-assets/
           source ./litmus/utils.sh
-
-          chaos_center_tar_maker runtime-assets "2.4.0" "2.3.0"
-
-          tar_maker jonsy13/e2e:ci runtime-assets/e2e.tar.gz
-          curl https://raw.githubusercontent.com/litmuschaos/litmus/master/litmus-portal/cluster-k8s-manifest.yml --output runtime-assets/litmus-portal-setup.yml
+          mkdir registry
+          chaos_center_tar_maker registry "2.4.0" "2.3.0"
+          tar_maker jonsy13/e2e:ci registry/e2e.tar.gz
 
       - name: Archive Assets
         uses: actions/upload-artifact@v2
         with:
-          name: runtime-assets
-          path: runtime-assets
+          name: registry
+          path: registry
 
   air-gapped-testing-job:
     runs-on: ubuntu-latest
@@ -59,16 +54,26 @@ jobs:
           - workflow-stats
 
     steps:
+      - uses: actions/checkout@v2
+
       - name: Download runtime-assets
         uses: actions/download-artifact@v2
         with:
-          name: runtime-assets
-          path: runtime-assets
+          name: registry
+          path: registry
+
+      - name: Setting up Runtime assets
+        run: |
+          mkdir runtime-assets
+          cp ./litmus/utils.sh runtime-assets/
+          cp ./litmus/kind.sh runtime-assets/
+          curl https://raw.githubusercontent.com/litmuschaos/litmus/master/litmus-portal/cluster-k8s-manifest.yml --output runtime-assets/litmus-portal-setup.yml
 
       # Creating a cluster with network none & mounting all assets inside the container as a host.
       - name: Creating an Air-gapped KIND Cluster & Running Tests
         run: |
           docker run -t --rm --network none \
-          -v "$(pwd)"/runtime-assets:/air-gapped-kind/registry \
+          -v "$(pwd)"/registry:/air-gapped-kind/registry \
+          -v "$(pwd)"/runtime-assets:/air-gapped-kind/runtime-assets
           --privileged jonsy13/air-gapped-kind:ci /bin/bash \
           -c "cd runtime-assets && ls && chmod +x ./kind.sh && ./kind.sh"
