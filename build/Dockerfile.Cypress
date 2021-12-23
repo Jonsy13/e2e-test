@@ -8,4 +8,4 @@ COPY ./Cypress /e2e
 RUN npm install
 RUN $(npm bin)/cypress verify
 
-ENTRYPOINT ["cypress", "run", "--config-file", "cypress.prod.json"]
+ENTRYPOINT $(npm bin)/cypress run --config-file cypress.prod.json
