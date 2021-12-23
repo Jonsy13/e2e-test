@@ -63,6 +63,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: runtime-assets
+          path: runtime-assets
 
       # Creating a cluster with network none & mounting all assets inside the container as a host.
       - name: Creating an Air-gapped KIND Cluster & Running Tests
