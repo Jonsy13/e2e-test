@@ -19,6 +19,9 @@ sleep 10
 echo -e "\n[Info]: --------------- Pods running in ${namespace} Namespace ---------------\n"
 kubectl get pods -n ${namespace}
 
+echo -e "\n[Info]: --------------- Pods running in ${namespace} Namespace ---------------\n"
+kubectl describe pods -n litmus
+
 echo -e "\n[Info]: --------------- Waiting for all pods to be ready ---------------\n"
 # Waiting for pods to be ready (timeout - 360s)
 wait_for_pods ${namespace} 360

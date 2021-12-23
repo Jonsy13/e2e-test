@@ -264,15 +264,7 @@ function registry_update(){
     sed -i -e "s|litmuschaos/litmusportal-server|$new_registry/litmusportal-server|g" $manifest
     sed -i -e "s|litmuschaos/litmusportal-auth-server|$new_registry/litmusportal-auth-server|g" $manifest
     sed -i -e "s|litmuschaos/curl|$new_registry/curl|g" $manifest
-    sed -i -e "s|litmuschaos/mongo|$new_registry/mongo|g" $manifest
-    sed -i -e "s|litmuschaos/mongo:4.2.8|$new_registry/mongo:4.2.8|g" $manifest
-    sed -i -e "s|litmuschaos/mongo:4.2.8|$new_registry/mongo:4.2.8|g" $manifest
-    sed -i -e "s|litmuschaos/mongo:4.2.8|$new_registry/mongo:4.2.8|g" $manifest
-    sed -i -e "s|litmuschaos/mongo:4.2.8|$new_registry/mongo:4.2.8|g" $manifest
-    sed -i -e "s|litmuschaos/mongo:4.2.8|$new_registry/mongo:4.2.8|g" $manifest
-    sed -i -e "s|litmuschaos/mongo:4.2.8|$new_registry/mongo:4.2.8|g" $manifest
-    sed -i -e "s|litmuschaos/mongo:4.2.8|$new_registry/mongo:4.2.8|g" $manifest
-    
+    sed -i -e "s|litmuschaos/mongo|$new_registry/mongo|g" $manifest    
 }
 
 # This function will pull the image, save it as tar & deletes the pulled image for saving memory consumption
