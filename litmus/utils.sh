@@ -1,9 +1,8 @@
 #!/bin/bash
 
-declare -ga portal_images=("litmusportal-frontend" "litmusportal-server" "litmusportal-event-tracker"
-                       "litmusportal-auth-server" "litmusportal-subscriber")
+declare -ga portal_images=("litmusportal-frontend" "litmusportal-server" "litmusportal-auth-server")
 
-declare -ga backend_images=("chaos-operator" "chaos-runner" "chaos-exporter" "go-runner")
+declare -ga backend_images=("chaos-operator" "chaos-runner" "chaos-exporter" "go-runner" "litmusportal-event-tracker" "litmusportal-subscriber")
 
 declare -ga workflow_images=("curl:latest" "k8s:latest" "litmus-checker:latest" "workflow-controller:v3.2.3" "argoexec:v3.2.3" "mongo:4.2.8")
 
@@ -168,7 +167,7 @@ function manifest_image_update(){
     echo -e "\n[Info]: backend component images ...\n"
     for val in ${backend_images[@]}; do
         echo "${i}. litmuschaos/${val}:${core_components_version}"
-        sed -i -e "s|litmuschaos/${val}:.*|litmuschaos/${val}:${core_components_version}|g" $manifest_name
+        sed -i -e "s|\"litmuschaos/${val}:.*\"|\"litmuschaos/${val}:${core_components_version}\"|g" $manifest_name
         i=$((i+1))
     done
 }
