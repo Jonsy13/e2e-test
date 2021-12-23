@@ -5,7 +5,7 @@ source utils.sh
 
 # Import pre-installed images
 echo -e "\n[Info]: --------------- Loading All Images for ChaosCenter ---------------\n"
-for file in ./*.tar; do
+for file in ./*.tar.gz; do
   docker load -q <$file
 done
 

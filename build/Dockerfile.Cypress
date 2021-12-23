@@ -1,4 +1,4 @@
-FROM cypress/included:7.3.0
+FROM cypress/browsers:node12.13.0-chrome80-ff74
 # make directory inside container
 RUN mkdir /e2e
 WORKDIR /e2e
