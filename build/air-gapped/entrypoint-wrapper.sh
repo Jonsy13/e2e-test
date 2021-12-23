@@ -63,7 +63,8 @@ for file in ./registry/*.tar.gz; do
   image_with_tag=${array[-1]}
   repo=${array[-2]}
   docker tag ${repo}/${image_with_tag} ${local_registry}/${image_with_tag}
-  docker push -q ${local_registry}/${image_with_tag} && docker rm ${repo}/${image_with_tag}
+  #Pushing the newly tagged image to local-registry & deleting the original image
+  docker push -q ${local_registry}/${image_with_tag} && docker image rm ${repo}/${image_with_tag}
 done
 
 exec "$@"
