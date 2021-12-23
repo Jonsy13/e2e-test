@@ -7,9 +7,6 @@ source utils.sh
 local_registry="localhost:5000"
 namespace="litmus"
 
-echo -e "\n[Info]: --------------- Updating Registry in manifest -----------------------------------------\n"
-registry_update "${local_registry}" litmus-portal-setup.yml
-
 echo -e "\n[Info]: --------------- Applying Manifest -----------------------------------------------------\n"
 kubectl apply -f litmus-portal-setup.yml
 
