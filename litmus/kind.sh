@@ -31,4 +31,4 @@ export AccessURL="http://$NODE_IP:$NODE_PORT"
 
 # Running Tests
 echo -e "\n[Info]: --------------- Starting Tests ---------------\n"
-docker run -it --net host -e CYPRESS_BASE_URL=${AccessURL} -e CYPRESS_INCLUDE_TAGS="login" jonsy13/e2e:ci
+docker run -it --net host -e CYPRESS_BASE_URL=${AccessURL} -e CYPRESS_INCLUDE_TAGS="login" ${local_registry}/e2e:ci
