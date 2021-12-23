@@ -287,7 +287,7 @@ function chaos_center_tar_maker(){
     for val in ${portal_images[@]}; do
         echo -e "\n[Info]: ${i}. litmuschaos/${val}:${control_plane_version}"
         image_name="litmuschaos/${val}:${control_plane_version}"
-        tar_maker $image_name "$assets_path/${i}.tar"
+        tar_maker $image_name "$assets_path/${i}.tar.gz"
         i=$((i+1))
     done
 
@@ -295,7 +295,7 @@ function chaos_center_tar_maker(){
     for val in ${backend_images[@]}; do
         echo -e "\n[Info]: ${i}. litmuschaos/${val}:${core_components_version}"
         image_name="litmuschaos/${val}:${core_components_version}"
-        tar_maker $image_name "$assets_path/${i}.tar"
+        tar_maker $image_name "$assets_path/${i}.tar.gz"
         i=$((i+1))
     done
 
@@ -303,7 +303,7 @@ function chaos_center_tar_maker(){
     for val in ${workflow_images[@]}; do
         echo -e "\n[Info]: ${i}. litmuschaos/${val}"
         image_name="litmuschaos/${val}"
-        tar_maker $image_name "$assets_path/${i}.tar"
+        tar_maker $image_name "$assets_path/${i}.tar.gz"
         i=$((i+1))
     done
     
@@ -312,5 +312,5 @@ function chaos_center_tar_maker(){
 tar_maker(){
     image_name=$1
     assetsPath=${2}
-    docker pull -q ${image_name} && docker save ${image_name} -o ${assetsPath} && docker image rm ${image_name}
+    docker pull -q ${image_name} && docker save ${image_name} | gzip > ${assetsPath} && docker image rm ${image_name}
 }
