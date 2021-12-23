@@ -3,36 +3,21 @@ set -e
 
 source utils.sh
 
-# Import pre-installed images
-echo -e "\n[Info]: --------------- Loading All Images for ChaosCenter ---------------\n"
-for file in ./*.tar.gz; do
-  docker load -q <$file
-done
-
 # Litmus-Portal Works starts from here
 local_registry="localhost:5000"
 namespace="litmus"
-version="ci"
 
-echo -e "\n[Info]: --------------- Tagging All Images for ChaosCenter for local registry ---------------\n"
-
-docker tag litmuschaos/litmusportal-frontend:ci ${local_registry}/litmusportal-frontend:ci
-docker tag litmuschaos/litmusportal-server:ci ${local_registry}/litmusportal-server:ci
-docker tag litmuschaos/litmusportal-auth-server:ci ${local_registry}/litmusportal-auth-server:ci
-docker tag litmuschaos/curl:latest ${local_registry}/curl:latest
-docker tag litmuschaos/mongo:4.2.8 ${local_registry}/mongo:4.2.8
-docker tag jonsy13/e2e:ci ${local_registry}/e2e:ci
-
-
-echo -e "\n[Info]: --------------- Pushing All Images for ChaosCenter to local registry ------------------\n"
-
-docker push -q ${local_registry}/litmusportal-frontend:ci
-docker push -q ${local_registry}/litmusportal-server:ci
-docker push -q ${local_registry}/litmusportal-auth-server:ci
-docker push -q ${local_registry}/curl:latest
-docker push -q ${local_registry}/mongo:4.2.8
-docker push -q ${local_registry}/e2e:ci
-
+# Import pre-installed images
+echo -e "\n[Info]: --------------- Loading All Images for ChaosCenter to local registry---------------\n"
+for file in ./*.tar.gz; do
+  loaded=$(docker load -q <$file)
+  full_image_name=$(echo ${loaded:15})
+  array=(`echo $full_image_name | sed 's|/|\n|g'`)
+  image_with_tag=${array[-1]}
+  repo=${array[-2]}
+  docker tag ${repo}/${image_with_tag} ${local_registry}/${image_with_tag}
+  docker push -q ${local_registry}/${image_with_tag}
+done
 echo -e "\n[Info]: --------------- Updating Registry in manifest -----------------------------------------\n"
 registry_update "${local_registry}" litmus-portal-setup.yml
 
