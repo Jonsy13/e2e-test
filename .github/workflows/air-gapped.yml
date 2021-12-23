@@ -69,6 +69,6 @@ jobs:
       - name: Creating an Air-gapped KIND Cluster & Running Tests
         run: |
           docker run -t --rm --network none \
-          -v "$(pwd)"/runtime-assets:/air-gapped-kind/runtime-assets \
+          -v "$(pwd)"/runtime-assets:/air-gapped-kind/registry \
           --privileged jonsy13/air-gapped-kind:ci /bin/bash \
           -c "cd runtime-assets && ls && chmod +x ./kind.sh && ./kind.sh"

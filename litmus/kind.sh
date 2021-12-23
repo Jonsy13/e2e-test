@@ -7,18 +7,6 @@ source utils.sh
 local_registry="localhost:5000"
 namespace="litmus"
 
-# Import pre-installed images
-echo -e "\n[Info]: --------------- Loading All Images for ChaosCenter to local registry---------------\n"
-for file in ./*.tar.gz; do
-  loaded=$(docker load -q <$file)
-  full_image_name=$(echo ${loaded:14})
-  array=(`echo $full_image_name | sed 's|/|\n|g'`)
-  image_with_tag=${array[-1]}
-  repo=${array[-2]}
-  docker tag ${repo}/${image_with_tag} ${local_registry}/${image_with_tag}
-  docker push -q ${local_registry}/${image_with_tag}
-done
-
 echo -e "\n[Info]: --------------- Updating Registry in manifest -----------------------------------------\n"
 registry_update "${local_registry}" litmus-portal-setup.yml
 

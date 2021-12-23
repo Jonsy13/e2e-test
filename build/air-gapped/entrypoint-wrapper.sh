@@ -2,7 +2,7 @@
 set -e
 set -o errexit
 
-echo "Setting up KIND cluster"
+echo -e "[Info]: -----------------------Setting up KIND cluster-----------------------"
 
 # Start docker service in background
 /usr/local/bin/dockerd-entrypoint.sh &
@@ -31,6 +31,7 @@ fi
 # create a cluster with the local registry enabled in containerd
 kind create cluster --image kindest/node:v1.21.1 --config=./kind-config.yml --wait=900s
 
+echo -e "[Info]: -----------------------Setting up Local Registry -----------------------"
 # connect the registry to the cluster network
 # (the network may already be connected)
 docker network connect "kind" "${reg_name}" || true
@@ -50,5 +51,19 @@ data:
 EOF
 
 local_registry="localhost:${reg_port}"
+
+echo -e "[Info]: -----------------------Local Registry created: ${local_registry} -----------------------"
+
+# Importing provided images into local registry
+echo -e "\n[Info]: --------------- Loading all provided images to local registry---------------\n"
+for file in ./registry/*.tar.gz; do
+  loaded=$(docker load -q <$file)
+  full_image_name=$(echo ${loaded:14})
+  array=(`echo $full_image_name | sed 's|/|\n|g'`)
+  image_with_tag=${array[-1]}
+  repo=${array[-2]}
+  docker tag ${repo}/${image_with_tag} ${local_registry}/${image_with_tag}
+  docker push -q ${local_registry}/${image_with_tag} && docker rm ${repo}/${image_with_tag}
+done
 
 exec "$@"
