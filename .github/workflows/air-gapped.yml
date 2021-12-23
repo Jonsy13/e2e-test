@@ -25,7 +25,7 @@ jobs:
 
           chaos_center_tar_maker runtime-assets "2.4.0" "2.3.0"
 
-          tar_maker jonsy13/e2e:ci runtime-assets/e2e.tar
+          tar_maker jonsy13/e2e:ci runtime-assets/e2e.tar.gz
           curl https://raw.githubusercontent.com/litmuschaos/litmus/master/litmus-portal/cluster-k8s-manifest.yml --output runtime-assets/litmus-portal-setup.yml
 
       - name: Archive Assets
