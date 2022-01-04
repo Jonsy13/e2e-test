@@ -1,6 +1,6 @@
 #!/bin/bash
 
-declare -ga portal_images=("cle-frontend" "cle-server" "cle-auth-server", "cle-license-module", "cle-event-tracker", "cle-subscriber")
+declare -ga portal_images=("cle-frontend" "cle-server" "cle-auth-server" "cle-license-module" "cle-event-tracker" "cle-subscriber")
 
 declare -ga backend_images=("chaos-operator" "chaos-runner" "chaos-exporter" "go-runner")
 
