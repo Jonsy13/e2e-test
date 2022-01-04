@@ -20,8 +20,8 @@ jobs:
         run: |
           source ./litmus/utils.sh
           mkdir registry
-          chaos_center_tar_maker registry "2.4.0" "2.3.0"
-          tar_maker jonsy13/e2e:ci registry/e2e.tar.gz
+          chaos_center_tar_maker registry "2.3.0" "2.2.0"
+        # tar_maker jonsy13/e2e:ci registry/e2e.tar.gz
 
       - name: Archive Assets
         uses: actions/upload-artifact@v2
@@ -29,54 +29,54 @@ jobs:
           name: registry
           path: registry
 
-  air-gapped-testing-job:
-    runs-on: ubuntu-latest
-    needs: images-setup
-    strategy:
-      fail-fast: false
-      matrix:
-        TestTag:
-          - login
-          - getstarted
-          - account-settings
-          - teaming
-          - users-management
-          - custom-workflow-scheduling
-          - template-workflow-scheduling
-          - predefined-workflow-scheduling
-          - recurring-workflow-scheduling
-          - upload-workflow-scheduling
-          - gitops-workflow-scheduling
-          - workflow-scheduling-crud-ops
-          - data-source
-          - myhub
-          - routing
-          - workflow-stats
+  # air-gapped-testing-job:
+  #   runs-on: ubuntu-latest
+  #   needs: images-setup
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       TestTag:
+  #         - login
+  #         - getstarted
+  #         - account-settings
+  #         - teaming
+  #         - users-management
+  #         - custom-workflow-scheduling
+  #         - template-workflow-scheduling
+  #         - predefined-workflow-scheduling
+  #         - recurring-workflow-scheduling
+  #         - upload-workflow-scheduling
+  #         - gitops-workflow-scheduling
+  #         - workflow-scheduling-crud-ops
+  #         - data-source
+  #         - myhub
+  #         - routing
+  #         - workflow-stats
 
-    steps:
-      - uses: actions/checkout@v2
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - name: Download runtime-assets
-        uses: actions/download-artifact@v2
-        with:
-          name: registry
-          path: registry
+  #     - name: Download runtime-assets
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: registry
+  #         path: registry
 
-      - name: Setting up Runtime assets
-        run: |
-          mkdir runtime-assets
-          source ./litmus/utils.sh
-          cp ./litmus/utils.sh runtime-assets/
-          cp ./litmus/kind.sh runtime-assets/
-          curl https://raw.githubusercontent.com/litmuschaos/litmus/master/litmus-portal/cluster-k8s-manifest.yml --output runtime-assets/litmus-portal-setup.yml
-          manifest_image_update "2.4.0" "2.3.0" runtime-assets/litmus-portal-setup.yml 
-          registry_update "localhost:5000" runtime-assets/litmus-portal-setup.yml
+  #     - name: Setting up Runtime assets
+  #       run: |
+  #         mkdir runtime-assets
+  #         source ./litmus/utils.sh
+  #         cp ./litmus/utils.sh runtime-assets/
+  #         cp ./litmus/kind.sh runtime-assets/
+  #         curl https://raw.githubusercontent.com/litmuschaos/litmus/master/litmus-portal/cluster-k8s-manifest.yml --output runtime-assets/litmus-portal-setup.yml
+  #         manifest_image_update "2.4.0" "2.3.0" runtime-assets/litmus-portal-setup.yml
+  #         registry_update "localhost:5000" runtime-assets/litmus-portal-setup.yml
 
-      # Creating a cluster with network none & mounting all assets inside the container as a host.
-      - name: Creating an Air-gapped KIND Cluster & Running Tests
-        run: |
-          docker run -t --rm --network none \
-          -v "$(pwd)"/registry:/air-gapped-kind/registry \
-          -v "$(pwd)"/runtime-assets:/air-gapped-kind/runtime-assets \
-          --privileged jonsy13/air-gapped-kind:ci /bin/bash \
-          -c "cd runtime-assets && ls && chmod +x ./kind.sh && ./kind.sh"
+  #     # Creating a cluster with network none & mounting all assets inside the container as a host.
+  #     - name: Creating an Air-gapped KIND Cluster & Running Tests
+  #       run: |
+  #         docker run -t --rm --network none \
+  #         -v "$(pwd)"/registry:/air-gapped-kind/registry \
+  #         -v "$(pwd)"/runtime-assets:/air-gapped-kind/runtime-assets \
+  #         --privileged jonsy13/air-gapped-kind:ci /bin/bash \
+  #         -c "cd runtime-assets && ls && chmod +x ./kind.sh && ./kind.sh"

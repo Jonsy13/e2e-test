@@ -1,10 +1,10 @@
 #!/bin/bash
 
-declare -ga portal_images=("litmusportal-frontend" "litmusportal-server" "litmusportal-auth-server")
+declare -ga portal_images=("cle-frontend" "cle-server" "cle-auth-server", "cle-license-module", "cle-event-tracker", "cle-subscriber")
 
-declare -ga backend_images=("chaos-operator" "chaos-runner" "chaos-exporter" "go-runner" "litmusportal-event-tracker" "litmusportal-subscriber")
+declare -ga backend_images=("chaos-operator" "chaos-runner" "chaos-exporter" "go-runner")
 
-declare -ga workflow_images=("curl:latest" "k8s:latest" "litmus-checker:latest" "workflow-controller:v3.2.3" "argoexec:v3.2.3" "mongo:4.2.8")
+declare -ga workflow_images=("curl:latest" "k8s:latest" "litmus-checker:latest" "workflow-controller:v2.11.0" "argoexec:v2.11.0" "mongo:4.2.8")
 
 ## Function to wait for a Given Endpoint to be active
 function wait_for_url(){
@@ -159,7 +159,7 @@ function manifest_image_update(){
 
     echo -e "\n[Info]: portal component images ...\n"
     for val in ${portal_images[@]}; do
-        echo "${i}. litmuschaos/${val}:${control_plane_version}"
+        echo "${i}. chaosnative/${val}:${control_plane_version}"
         sed -i -e "s|litmuschaos/${val}:.*|litmuschaos/${val}:${control_plane_version}|g" $manifest_name
         i=$((i+1))
     done
@@ -276,8 +276,8 @@ function chaos_center_tar_maker(){
 
     echo -e "\n[Info]: pulling portal component images ...\n"
     for val in ${portal_images[@]}; do
-        echo -e "\n[Info]: ${i}. litmuschaos/${val}:${control_plane_version}"
-        image_name="litmuschaos/${val}:${control_plane_version}"
+        echo -e "\n[Info]: ${i}. chaosnative/${val}:${control_plane_version}"
+        image_name="chaosnative/${val}:${control_plane_version}"
         tar_maker $image_name "$assets_path/${i}.tar.gz"
         i=$((i+1))
     done
