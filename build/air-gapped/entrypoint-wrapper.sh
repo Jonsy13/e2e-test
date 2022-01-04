@@ -57,7 +57,7 @@ echo -e "[Info]: -----------------------Local Registry created: ${local_registry
 # Importing provided images into local registry
 echo -e "\n[Info]: --------------- Loading all provided images to local registry---------------\n"
 for file in ./registry/*.tar.gz; do
-  loaded=$(docker load -q <$file)
+  loaded=$(docker load -q <$file) # loaded: dockier.io/litmuschaos/litmuspor:ci
   full_image_name=$(echo ${loaded:14})
   array=(`echo $full_image_name | sed 's|/|\n|g'`)
   image_with_tag=${array[-1]}
