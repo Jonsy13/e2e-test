@@ -12,8 +12,8 @@ installation_mode=${INSTALLATION_MODE}
 function install_portal_cs_mode() {
 
     echo -e "\n---------------Installing Litmus-Portal in Cluster Scope----------\n"
-    curl https://raw.githubusercontent.com/Jonsy13/test-e2e-build/master/litmus-portal/cluster-k8s-manifest.yml --output litmus-portal-setup.yml
-    # manifest_image_update $version litmus-portal-setup.yml
+    curl https://raw.githubusercontent.com/litmuschaos/litmus/master/litmus-portal/cluster-k8s-manifest.yml --output litmus-portal-setup.yml
+    manifest_image_update $version litmus-portal-setup.yml
 
     kubectl apply -f litmus-portal-setup.yml
 }
@@ -28,11 +28,11 @@ function install_portal_ns_mode(){
     # Exporting namespace variable to update `namespaced-k8s-template.yml` manifest
     export LITMUS_PORTAL_NAMESPACE=${namespace}
     # Downloading manifest for namespaced mode installation
-    curl https://raw.githubusercontent.com/Jonsy13/test-e2e-build/master/litmus-portal/namespaced-k8s-template.yml --output litmus-portal-namespaced-k8s-template.yml
+    curl https://raw.githubusercontent.com/litmuschaos/litmus/master/litmus-portal/namespaced-k8s-template.yml --output litmus-portal-namespaced-k8s-template.yml
 
     # Replacing ${LITMUS_PORTAL_NAMESPACE}
     envsubst '${LITMUS_PORTAL_NAMESPACE}' < litmus-portal-namespaced-k8s-template.yml > ${namespace}-ns-scoped-litmus-portal-manifest.yml
-    # manifest_image_update $version ${namespace}-ns-scoped-litmus-portal-manifest.yml
+    manifest_image_update $version ${namespace}-ns-scoped-litmus-portal-manifest.yml
 
     cat ${namespace}-ns-scoped-litmus-portal-manifest.yml
 
@@ -63,8 +63,8 @@ function wait_for_portal_to_be_ready(){
     verify_pod mongo ${namespace}
 
     # Images verification
-    # verify_deployment_image $version litmusportal-frontend ${namespace}
-    # verify_deployment_image $version litmusportal-server ${namespace}
+    verify_deployment_image $version litmusportal-frontend ${namespace}
+    verify_deployment_image $version litmusportal-server ${namespace}
 }
 
 if [[ "$installation_mode" == "CS-MODE" ]];then

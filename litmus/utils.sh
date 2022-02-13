@@ -1,11 +1,5 @@
 #!/bin/bash
 
-declare -ga portal_images=("cle-frontend" "cle-server" "cle-auth-server" "cle-license-module" "cle-event-tracker" "cle-subscriber")
-
-declare -ga backend_images=("chaos-operator" "chaos-runner" "chaos-exporter" "go-runner")
-
-declare -ga workflow_images=("curl:latest" "k8s:latest" "litmus-checker:latest" "workflow-controller:v2.11.0" "argoexec:v2.11.0" "mongo:4.2.8")
-
 ## Function to wait for a Given Endpoint to be active
 function wait_for_url(){
     wait_period=0
@@ -72,17 +66,6 @@ function wait_for_ingress(){
         fi
     done; 
 }
-
-
-function get_last_nth_release(){
-    release_no=${1}
-    tail=$(expr ${release_no} - 1)
-    curl --silent "https://api.github.com/repos/litmuschaos/litmus-go/releases" |
-    grep -m${release_no} '"tag_name":' |
-    tail -n${tail} |                                          
-    sed -E 's/.*"([^"]+)".*/\1/'
-}
-                        
 
 ## Function to list requested resources in given namespaces
 function show_resources(){
@@ -152,24 +135,14 @@ function verify_namespace(){
 
 ## Function to update images in portal manifests, Currently specific to Portal Only
 function manifest_image_update(){
-    control_plane_version=$1
-    core_components_version=$2
-    manifest_name=$3
-    i=1
-
-    echo -e "\n[Info]: portal component images ...\n"
-    for val in ${portal_images[@]}; do
-        echo "${i}. chaosnative/${val}:${control_plane_version}"
-        sed -i -e "s|litmuschaos/${val}:.*|litmuschaos/${val}:${control_plane_version}|g" $manifest_name
-        i=$((i+1))
-    done
-
-    echo -e "\n[Info]: backend component images ...\n"
-    for val in ${backend_images[@]}; do
-        echo "${i}. litmuschaos/${val}:${core_components_version}"
-        sed -i -e "s|\"litmuschaos/${val}:.*\"|\"litmuschaos/${val}:${core_components_version}\"|g" $manifest_name
-        i=$((i+1))
-    done
+    version="$1"
+    manifest_name="$2"
+    echo "$2"
+    sed -i -e "s|litmuschaos/litmusportal-frontend:ci|litmuschaos/litmusportal-frontend:$version|g" $manifest_name
+    sed -i -e "s|litmuschaos/litmusportal-server:ci|litmuschaos/litmusportal-server:$version|g" $manifest_name
+    sed -i -e "s|litmuschaos/litmusportal-auth-server:ci|litmuschaos/litmusportal-auth-server:$version|g" $manifest_name
+    sed -i -e "s|litmuschaos/litmusportal-subscriber:ci|litmuschaos/litmusportal-subscriber:$version|g" $manifest_name
+    sed -i -e "s|litmuschaos/litmusportal-event-tracker:ci|litmuschaos/litmusportal-event-tracker:$version|g" $manifest_name
 }
 
 ## Function to verify image for a deployment in given namespace
@@ -254,54 +227,4 @@ function get_access_point(){
         echo "URL=$AccessURL" >> $GITHUB_ENV
 
     fi
-}
-
-function registry_update(){
-    new_registry=$1
-    manifest=$2
-    sed -i -e "s|litmuschaos/litmusportal-frontend|$new_registry/litmusportal-frontend|g" $manifest
-    sed -i -e "s|litmuschaos/litmusportal-server|$new_registry/litmusportal-server|g" $manifest
-    sed -i -e "s|litmuschaos/litmusportal-auth-server|$new_registry/litmusportal-auth-server|g" $manifest
-    sed -i -e "s|litmuschaos/curl|$new_registry/curl|g" $manifest
-    sed -i -e "s|litmuschaos/mongo|$new_registry/mongo|g" $manifest    
-}
-
-# This function will pull the image, save it as tar & deletes the pulled image for saving memory consumption
-function chaos_center_tar_maker(){
-    assets_path=$1
-    control_plane_version=$2
-    core_components_version=$3
-
-    i=1
-
-    echo -e "\n[Info]: pulling portal component images ...\n"
-    for val in ${portal_images[@]}; do
-        echo -e "\n[Info]: ${i}. chaosnative/${val}:${control_plane_version}"
-        image_name="chaosnative/${val}:${control_plane_version}"
-        tar_maker $image_name "$assets_path/${i}.tar.gz"
-        i=$((i+1))
-    done
-
-    echo -e "\n[Info]: pulling backend component images ...\n"
-    for val in ${backend_images[@]}; do
-        echo -e "\n[Info]: ${i}. litmuschaos/${val}:${core_components_version}"
-        image_name="litmuschaos/${val}:${core_components_version}"
-        tar_maker $image_name "$assets_path/${i}.tar.gz"
-        i=$((i+1))
-    done
-
-    echo -e "\n[Info]: pulling other images ...\n"
-    for val in ${workflow_images[@]}; do
-        echo -e "\n[Info]: ${i}. litmuschaos/${val}"
-        image_name="litmuschaos/${val}"
-        tar_maker $image_name "$assets_path/${i}.tar.gz"
-        i=$((i+1))
-    done
-    
-}
-
-tar_maker(){
-    image_name=$1
-    assetsPath=${2}
-    docker pull -q ${image_name} && docker save ${image_name} | gzip > ${assetsPath} && docker image rm ${image_name}
 }
