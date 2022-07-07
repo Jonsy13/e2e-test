@@ -6,17 +6,17 @@ RUN apk update && \
     apk add tar && \
     wget https://litmusctl-production-bucket.s3.amazonaws.com/litmusctl-linux-amd64-v0.9.0.tar.gz && \
     mkdir litmusctl-linux-amd64-v0.9.0 && tar -zxvf litmusctl-linux-amd64-v0.9.0.tar.gz -C litmusctl-linux-amd64-v0.9.0 && \
-    chmod +x litmusctl-linux-amd64-v0.9.0/litmusctl && \
-    wget https://litmusctl-production-bucket.s3.amazonaws.com/litmusctl-windows-386-v0.9.0.tar.gz && \
-    mkdir litmusctl-windows-386-v0.9.0 && tar -zxvf litmusctl-windows-386-v0.9.0.tar.gz -C litmusctl-windows-386-v0.9.0 && \
-    chmod +x litmusctl-windows-386-v0.9.0/litmusctl && \
-    wget https://litmusctl-production-bucket.s3.amazonaws.com/litmusctl-windows-amd64-v0.9.0.tar.gz && \
-    mkdir litmusctl-windows-amd64-v0.9.0 && tar -zxvf litmusctl-windows-amd64-v0.9.0.tar.gz -C litmusctl-windows-amd64-v0.9.0 && \
-    chmod +x litmusctl-windows-amd64-v0.9.0/litmusctl
+    chmod +x litmusctl-linux-amd64-v0.9.0/litmusctl
+    # wget https://litmusctl-production-bucket.s3.amazonaws.com/litmusctl-windows-386-v0.9.0.tar.gz && \
+    # mkdir litmusctl-windows-386-v0.9.0 && tar -zxvf litmusctl-windows-386-v0.9.0.tar.gz -C litmusctl-windows-386-v0.9.0 && \
+    # chmod +x litmusctl-windows-386-v0.9.0/litmusctl && \
+    # wget https://litmusctl-production-bucket.s3.amazonaws.com/litmusctl-windows-amd64-v0.9.0.tar.gz && \
+    # mkdir litmusctl-windows-amd64-v0.9.0 && tar -zxvf litmusctl-windows-amd64-v0.9.0.tar.gz -C litmusctl-windows-amd64-v0.9.0 && \
+    # chmod +x litmusctl-windows-amd64-v0.9.0/litmusctl
 
 FROM litmuschaos/infra-alpine
 
-COPY --from=builder /binaries/* .
+COPY --from=builder /binaries/litmusctl-linux-amd64-v0.9.0 /usr/bin/
 
 
 
