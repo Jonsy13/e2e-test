@@ -16,7 +16,7 @@ RUN apk update && \
 
 FROM litmuschaos/infra-alpine
 
-COPY --from=builder /binaries/*-v0.9.0 .
+COPY --from=builder /binaries/* .
 
 
 
