@@ -36,5 +36,5 @@ jobs:
         with:
           push: true
           file: build/Dockerfile.litmusctl
-          platforms: linux/amd64
+          platforms: linux/amd64,darwin
           tags: jonsy13/litmusctl:ci
