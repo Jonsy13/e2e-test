@@ -15,7 +15,7 @@ jobs:
       - name: Setting up Image Assets
         run: |
           mkdir assets
-          docker pull ${image_name} && docker save ${image_name} -o assets/go-runner.tar
+          docker pull ${image_name} && docker save ${image_name} | gzip > assets/go-runner.tar.gz
         env:
           image_name: ${{github.event.inputs.image_name_with_tag}}
 
