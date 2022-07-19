@@ -1,0 +1,26 @@
+---
+name: Image Tar ball exporter
+on:
+  workflow_dispatch:
+    inputs:
+      image_name_with_tag:
+        default: ""
+
+jobs:
+  images-setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setting up Image Assets
+        run: |
+          mkdir registry
+          docker pull ${image_name} && docker save ${image_name} -o assets/go-runner.tar
+        env:
+          image_name: ${{github.event.inputs.image_name_with_tag}}
+
+      - name: Archive Assets
+        uses: actions/upload-artifact@v2
+        with:
+          name: registry
+          path: registry
