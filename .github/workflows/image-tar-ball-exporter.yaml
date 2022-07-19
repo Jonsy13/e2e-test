@@ -14,7 +14,7 @@ jobs:
 
       - name: Setting up Image Assets
         run: |
-          mkdir registry
+          mkdir assets
           docker pull ${image_name} && docker save ${image_name} -o assets/go-runner.tar
         env:
           image_name: ${{github.event.inputs.image_name_with_tag}}
@@ -22,5 +22,5 @@ jobs:
       - name: Archive Assets
         uses: actions/upload-artifact@v2
         with:
-          name: registry
-          path: registry
+          name: assets
+          path: assets
