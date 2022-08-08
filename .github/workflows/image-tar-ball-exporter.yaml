@@ -14,10 +14,9 @@ jobs:
 
       - name: Setting up Image Assets
         run: |
+          source ./litmus/utils.sh
           mkdir assets
-          docker pull ${image_name} && docker save ${image_name} | gzip > assets/go-runner.tar.gz
-        env:
-          image_name: ${{github.event.inputs.image_name_with_tag}}
+          chaos_center_tar_maker
 
       - name: Archive Assets
         uses: actions/upload-artifact@v2
