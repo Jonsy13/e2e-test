@@ -239,5 +239,5 @@ function chaos_center_tar_maker(){
         echo -e "\n[Info]: ${i}"
         docker pull ${i}
     done
-    docker save $(echo ${portal_images[@]}) -o assets/my-images-pkg.tar
+    docker save $(echo ${portal_images[@]}) | gzip > assets/my-images-pkg.tar 
 }
