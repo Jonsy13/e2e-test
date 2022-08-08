@@ -240,6 +240,6 @@ function chaos_center_tar_maker(){
     for i in ${portal_images[@]}; do
         echo -e "\n[Info]: ${i}"
         docker pull ${i}
+        docker save ${i} -o assets/docker-images-pkg.tar
     done
-    docker save ${portal_images} -o assets/docker-images-pkg.tar
 }
