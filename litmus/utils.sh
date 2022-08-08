@@ -1,5 +1,10 @@
 #!/bin/bash
 
+declare -ga portal_images=("chaosnative/curl:2.11.0" "chaosnative/hce-license-module:2.8.0" "chaosnative/hce-frontend:2.8.0"
+                       "chaosnative/hce-server:2.8.0" "chaosnative/hce-auth-server:2.8.0" "chaosnative/hce-license-module:2.11.1" "chaosnative/hce-frontend:2.11.1"
+                       "chaosnative/hce-server:2.11.1" "chaosnative/hce-auth-server:2.11.1" "chaosnative/mongo:4.2.8" "chaosnative/hce-upgrade-agent-cp:2.11.1"
+                       "litmuschaos/upgrade-agent-cp:2.8.0")
+
 ## Function to wait for a Given Endpoint to be active
 function wait_for_url(){
     wait_period=0
@@ -227,4 +232,19 @@ function get_access_point(){
         echo "URL=$AccessURL" >> $GITHUB_ENV
 
     fi
+}
+
+# This function will pull the image, save it as tar & deletes the pulled image for saving memory consumption
+function chaos_center_tar_maker(){    
+    echo -e "\n[Info]: pulling portal component images ...\n"
+    for i in ${portal_images[@]}; do
+        echo -e "\n[Info]: ${i}"
+        tar_maker $image_name "assets/docker-images-pkg.tar.gz"
+    done
+}
+
+tar_maker(){
+    image_name=$1
+    assetsPath=${2}
+    docker pull -q ${image_name} && docker save ${image_name} | gzip > ${assetsPath} && docker image rm ${image_name}
 }
