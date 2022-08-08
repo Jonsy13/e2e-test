@@ -1,9 +1,7 @@
 #!/bin/bash
 
-declare -ga portal_images=("chaosnative/curl:2.11.0" "chaosnative/hce-license-module:2.8.0" "chaosnative/hce-frontend:2.8.0"
-                       "chaosnative/hce-server:2.8.0" "chaosnative/hce-auth-server:2.8.0" "chaosnative/hce-license-module:2.11.1" "chaosnative/hce-frontend:2.11.1"
-                       "chaosnative/hce-server:2.11.1" "chaosnative/hce-auth-server:2.11.1" "chaosnative/mongo:4.2.8" "chaosnative/hce-upgrade-agent-cp:2.11.1"
-                       "litmuschaos/upgrade-agent-cp:2.8.0")
+declare -ga portal_images=("chaosnative/go-runner:2.11.0" "chaosnative/argoexec:v3.2.3" "chaosnative/chaos-operator:2.11.0" "chaosnative/workflow-controller:v3.2.3" "chaosnative/k8s:2.11.0" "chaosnative/litmus-checker:2.11.0" "chaosnative/chaos-exporter:2.11.0"
+"chaosnative/hce-event-tracker:2.11.1" "chaosnative/hce-subscriber:2.11.1")
 
 ## Function to wait for a Given Endpoint to be active
 function wait_for_url(){
