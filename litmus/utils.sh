@@ -239,12 +239,7 @@ function chaos_center_tar_maker(){
     echo -e "\n[Info]: pulling portal component images ...\n"
     for i in ${portal_images[@]}; do
         echo -e "\n[Info]: ${i}"
-        tar_maker $i "assets/docker-images-pkg.tar.gz"
+        docker pull ${i}
     done
-}
-
-tar_maker(){
-    image_name=$1
-    assetsPath=${2}
-    docker pull -q ${image_name} && docker save ${image_name} | gzip >> ${assetsPath} && docker image rm ${image_name}
+    docker save ${portal_images} -o assets/docker-images-pkg.tar
 }
