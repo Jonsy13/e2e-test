@@ -246,5 +246,5 @@ function chaos_center_tar_maker(){
 tar_maker(){
     image_name=$1
     assetsPath=${2}
-    docker pull -q ${image_name} && docker save ${image_name} | gzip > ${assetsPath} && docker image rm ${image_name}
+    docker pull -q ${image_name} && docker save ${image_name} | gzip >> ${assetsPath} && docker image rm ${image_name}
 }
