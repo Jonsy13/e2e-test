@@ -239,7 +239,7 @@ function chaos_center_tar_maker(){
     echo -e "\n[Info]: pulling portal component images ...\n"
     for i in ${portal_images[@]}; do
         echo -e "\n[Info]: ${i}"
-        tar_maker $image_name "assets/docker-images-pkg.tar.gz"
+        tar_maker $i "assets/docker-images-pkg.tar.gz"
     done
 }
 
