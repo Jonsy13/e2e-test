@@ -7,6 +7,8 @@ declare -ga portal_images=("chaosnative/curl:2.11.0" "chaosnative/hce-license-mo
 
 declare -ga dns_utils_images=("k8s.gcr.io/e2e-test-images/jessie-dnsutils:1.3" "nginx:1.18")
 
+declare -ga go_runner_images=("chaosnative/go-runner:ci")
+
 ## Function to wait for a Given Endpoint to be active
 function wait_for_url(){
     wait_period=0
@@ -239,9 +241,9 @@ function get_access_point(){
 # This function will pull the image, save it as tar & deletes the pulled image for saving memory consumption
 function chaos_center_tar_maker(){    
     echo -e "\n[Info]: pulling portal component images ...\n"
-    for i in ${dns_utils_images[@]}; do
+    for i in ${go_runner_images[@]}; do
         echo -e "\n[Info]: ${i}"
         docker pull ${i}
     done
-    docker save $(echo ${dns_utils_images[@]}) | gzip > assets/my-images-pkg.tar.gz
+    docker save $(echo ${go_runner_images[@]}) | gzip > assets/my-images-pkg.tar.gz
 }
