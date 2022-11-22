@@ -1,7 +1,12 @@
 #!/bin/bash
 
 declare -ga portal_images=("chaosnative/curl:2.13.0" "chaosnative/hce-license-module:2.13.0" "chaosnative/hce-frontend:2.13.0"
-                       "chaosnative/hce-server:2.13.0" "chaosnative/hce-auth-server:2.13.0" "chaosnative/mongo:4.2.8" "chaosnative/hce-upgrade-agent-cp:2.13.0")
+                       "chaosnative/hce-server:2.13.0" "chaosnative/hce-auth-server:2.13.0" "chaosnative/mongo:4.2.8" 
+                       "chaosnative/hce-upgrade-agent-cp:2.13.0")
+
+declare -ga execution_plane_images=("chaosnative/go-runner:2.13.0" "chaosnative/argoexec:v3.3.1" "chaosnative/chaos-operator:2.13.0" 
+                       "chaosnative/workflow-controller:v3.3.1" "chaosnative/k8s:2.13.0" "chaosnative/litmus-checker:2.13.0" 
+                       "chaosnative/chaos-exporter:2.13.0" "chaosnative/hce-event-tracker:2.13.0" "chaosnative/hce-subscriber:2.13.0")
 
 declare -ga dns_utils_images=("k8s.gcr.io/e2e-test-images/jessie-dnsutils:1.3" "nginx:1.18")
 
