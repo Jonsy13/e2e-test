@@ -244,7 +244,7 @@ function get_access_point(){
 # This function will pull the image, save it as tar & deletes the pulled image for saving memory consumption
 function chaos_center_tar_maker(){    
     echo -e "\n[Info]: pulling portal component images ...\n"
-    for i in ${portal_images[@]}; do
+    for i in ${execution_plane_images[@]}; do
         echo -e "\n[Info]: ${i}"
         docker pull ${i}
     done
