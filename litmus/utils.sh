@@ -4,7 +4,7 @@
 #                        "chaosnative/hce-server:2.13.0" "chaosnative/hce-auth-server:2.13.0" "chaosnative/mongo:4.2.8" 
 #                        "chaosnative/hce-upgrade-agent-cp:2.13.0")
                        
-declare -ga portal_images=("chaosnative/hce-frontend:2.13.0" "chaosnative/hce-server:2.13.0")
+declare -ga portal_images=("chaosnative/hce-frontend:2.13.1" "chaosnative/hce-server:2.13.1")
 
 # declare -ga execution_plane_images=("chaosnative/go-runner:2.13.0" "chaosnative/argoexec:v3.3.1" "chaosnative/chaos-operator:2.13.0" 
 #                        "chaosnative/workflow-controller:v3.3.1" "chaosnative/k8s:2.13.0" "chaosnative/litmus-checker:2.13.0" 
@@ -247,9 +247,9 @@ function get_access_point(){
 # This function will pull the image, save it as tar & deletes the pulled image for saving memory consumption
 function chaos_center_tar_maker(){    
     echo -e "\n[Info]: pulling portal component images ...\n"
-    for i in ${go_runner_image[@]}; do
+    for i in ${portal_images[@]}; do
         echo -e "\n[Info]: ${i}"
         docker pull ${i}
     done
-    docker save $(echo ${go_runner_image[@]}) | gzip > assets/go_runner_image.tar.gz
+    docker save $(echo ${portal_images[@]}) | gzip > assets/portal_images.tar.gz
 }
