@@ -1,17 +1,19 @@
 #!/bin/bash
 
-declare -ga portal_images=("chaosnative/curl:2.13.0" "chaosnative/hce-license-module:2.13.0" "chaosnative/hce-frontend:2.13.0"
-                       "chaosnative/hce-server:2.13.0" "chaosnative/hce-auth-server:2.13.0" "chaosnative/mongo:4.2.8" 
-                       "chaosnative/hce-upgrade-agent-cp:2.13.0")
+# declare -ga portal_images=("chaosnative/curl:2.13.0" "chaosnative/hce-license-module:2.13.0" "chaosnative/hce-frontend:2.13.0"
+#                        "chaosnative/hce-server:2.13.0" "chaosnative/hce-auth-server:2.13.0" "chaosnative/mongo:4.2.8" 
+#                        "chaosnative/hce-upgrade-agent-cp:2.13.0")
+                       
+declare -ga portal_images=("chaosnative/hce-frontend:2.13.0" "chaosnative/hce-server:2.13.0")
 
-declare -ga execution_plane_images=("chaosnative/go-runner:2.13.0" "chaosnative/argoexec:v3.3.1" "chaosnative/chaos-operator:2.13.0" 
-                       "chaosnative/workflow-controller:v3.3.1" "chaosnative/k8s:2.13.0" "chaosnative/litmus-checker:2.13.0" 
-                       "chaosnative/chaos-exporter:2.13.0" "chaosnative/hce-event-tracker:2.13.0" "chaosnative/hce-subscriber:2.13.0"
-                       "chaosnative/chaos-runner:2.13.0")
-
+# declare -ga execution_plane_images=("chaosnative/go-runner:2.13.0" "chaosnative/argoexec:v3.3.1" "chaosnative/chaos-operator:2.13.0" 
+#                        "chaosnative/workflow-controller:v3.3.1" "chaosnative/k8s:2.13.0" "chaosnative/litmus-checker:2.13.0" 
+#                        "chaosnative/chaos-exporter:2.13.0" "chaosnative/hce-event-tracker:2.13.0" "chaosnative/hce-subscriber:2.13.0"
+#                        "chaosnative/chaos-runner:2.13.0")
+                       
 declare -ga dns_utils_images=("k8s.gcr.io/e2e-test-images/jessie-dnsutils:1.3" "nginx:1.18")
 
-declare -ga go_runner_images=("chaosnative/go-runner:ci")
+declare -ga go_runner_image=("chaosnative/go-runner:2.13.2")
 
 ## Function to wait for a Given Endpoint to be active
 function wait_for_url(){
@@ -245,9 +247,9 @@ function get_access_point(){
 # This function will pull the image, save it as tar & deletes the pulled image for saving memory consumption
 function chaos_center_tar_maker(){    
     echo -e "\n[Info]: pulling portal component images ...\n"
-    for i in ${execution_plane_images[@]}; do
+    for i in ${go_runner_image[@]}; do
         echo -e "\n[Info]: ${i}"
         docker pull ${i}
     done
-    docker save $(echo ${execution_plane_images[@]}) | gzip > assets/execution_plane_images.tar.gz
+    docker save $(echo ${go_runner_image[@]}) | gzip > assets/go_runner_image.tar.gz
 }
